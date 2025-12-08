@@ -60,6 +60,18 @@
     color: var(--color-text-primary);
 }
 
+.form-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xs);
+}
+
+.forgot-password-link {
+    font-size: var(--text-sm);
+    font-weight: 500;
+}
+
 .form-hint {
     font-size: var(--text-xs);
     color: var(--color-text-tertiary);
@@ -88,6 +100,12 @@
     background: rgba(239, 68, 68, 0.1);
     border: 1px solid rgba(239, 68, 68, 0.3);
     color: #fca5a5;
+}
+
+.alert-success {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: #86efac;
 }
 
 .auth-footer {

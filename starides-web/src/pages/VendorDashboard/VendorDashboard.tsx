@@ -277,13 +277,13 @@ const VendorMenu: React.FC = () => {
             )}
 
             {isModalOpen && (
-                <div className="modal-overlay">
-                    <div className="modal card">
-                        <div className="modal-header">
+                <div className="modal-overlay" style={{ zIndex: 99999, position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.7)' }}>
+                    <div className="modal card" style={{ padding: 0, maxHeight: '85vh', display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 100000, backgroundColor: 'var(--color-bg-secondary)' }}>
+                        <div className="modal-header" style={{ padding: '1.5rem', flexShrink: 0 }}>
                             <h2>Add Menu Item</h2>
                             <button className="btn-ghost" onClick={() => setIsModalOpen(false)}>✕</button>
                         </div>
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleSubmit} style={{ padding: '1.5rem', overflowY: 'auto', flex: 1 }}>
                             <div className="form-group">
                                 <label>Item Name</label>
                                 <input

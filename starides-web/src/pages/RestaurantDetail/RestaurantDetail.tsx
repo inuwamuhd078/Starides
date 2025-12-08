@@ -4,6 +4,7 @@ import { useQuery } from '@apollo/client';
 import { GET_RESTAURANT_WITH_MENU } from '../../graphql/queries';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
+import RestaurantMap from '../../components/Map/RestaurantMap';
 import './RestaurantDetail.css';
 
 const RestaurantDetail: React.FC = () => {
@@ -119,6 +120,11 @@ const RestaurantDetail: React.FC = () => {
                         )}
                     </div>
                 </div>
+            </div>
+
+            {/* Restaurant Location Map */}
+            <div className="container">
+                <RestaurantMap restaurant={restaurant} height="400px" />
             </div>
 
             {/* Menu */}

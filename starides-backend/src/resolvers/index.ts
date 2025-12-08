@@ -5,6 +5,7 @@ import { menuItemResolvers } from './menuItemResolvers';
 import { orderResolvers } from './orderResolvers';
 import { reviewResolvers } from './reviewResolvers';
 import { statsResolvers } from './statsResolvers';
+import { passwordResetResolvers } from './passwordResetResolvers';
 
 export const resolvers = {
     Query: {
@@ -18,6 +19,7 @@ export const resolvers = {
     },
     Mutation: {
         ...authResolvers.Mutation,
+        ...passwordResetResolvers.Mutation,
         ...userResolvers.Mutation,
         ...restaurantResolvers.Mutation,
         ...menuItemResolvers.Mutation,

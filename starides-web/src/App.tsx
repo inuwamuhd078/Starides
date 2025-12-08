@@ -8,6 +8,8 @@ import Restaurants from './pages/Restaurants/Restaurants';
 import Orders from './pages/Orders/Orders';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
+import ForgotPassword from './pages/Auth/ForgotPassword';
+import ResetPassword from './pages/Auth/ResetPassword';
 import BrowseRestaurants from './pages/BrowseRestaurants/BrowseRestaurants';
 import RestaurantDetail from './pages/RestaurantDetail/RestaurantDetail';
 import Cart from './pages/Cart/Cart';
@@ -70,6 +72,8 @@ const AppRoutes: React.FC = () => {
                 path="/register"
                 element={isAuthenticated ? <Navigate to={getDashboardRoute()} replace /> : <Register />}
             />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
 
             {/* Restaurant Browsing & Ordering */}
             <Route path="/restaurants" element={<BrowseRestaurants />} />

@@ -38,6 +38,9 @@ export interface IUser extends Document {
         };
         isDefault: boolean;
     }>;
+    // Password reset fields
+    resetPasswordToken?: string;
+    resetPasswordExpires?: Date;
 }
 
 const UserSchema = new Schema<IUser>(
@@ -108,7 +111,9 @@ const UserSchema = new Schema<IUser>(
                     default: false
                 }
             }
-        ]
+        ],
+        resetPasswordToken: String,
+        resetPasswordExpires: Date
     },
     {
         timestamps: true

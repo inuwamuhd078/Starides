@@ -99,9 +99,14 @@ const Login: React.FC = () => {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="password" className="form-label">
-                                Password
-                            </label>
+                            <div className="form-label-row">
+                                <label htmlFor="password" className="form-label">
+                                    Password
+                                </label>
+                                <Link to="/forgot-password" className="link forgot-password-link">
+                                    Forgot Password?
+                                </Link>
+                            </div>
                             <input
                                 type="password"
                                 id="password"
