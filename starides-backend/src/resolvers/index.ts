@@ -6,6 +6,7 @@ import { orderResolvers } from './orderResolvers';
 import { reviewResolvers } from './reviewResolvers';
 import { statsResolvers } from './statsResolvers';
 import { passwordResetResolvers } from './passwordResetResolvers';
+import { chatResolvers } from './chatResolvers';
 
 export const resolvers = {
     Query: {
@@ -24,7 +25,8 @@ export const resolvers = {
         ...restaurantResolvers.Mutation,
         ...menuItemResolvers.Mutation,
         ...orderResolvers.Mutation,
-        ...reviewResolvers.Mutation
+        ...reviewResolvers.Mutation,
+        ...chatResolvers.Mutation
     },
     User: userResolvers.User,
     Restaurant: restaurantResolvers.Restaurant,

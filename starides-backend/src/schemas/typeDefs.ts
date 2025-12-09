@@ -213,6 +213,14 @@ export const typeDefs = `#graphql
     totalCustomers: Int!
   }
 
+  type ChatMessage {
+    id: ID!
+    sender: String!
+    text: String!
+    timestamp: String!
+    isBot: Boolean!
+  }
+
   # Inputs
   input RegisterInput {
     email: String!
@@ -373,6 +381,9 @@ export const typeDefs = `#graphql
     # Review
     createReview(input: ReviewInput!): Review!
     respondToReview(reviewId: ID!, response: String!): Review!
+
+    # Chat
+    sendMessage(text: String!): ChatMessage!
   }
 
   # Subscriptions

@@ -19,6 +19,10 @@ import VendorDashboard from './pages/VendorDashboard/VendorDashboard';
 import RiderDashboard from './pages/RiderDashboard/RiderDashboard';
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
 import { CartProvider } from './context/CartContext';
+import ChatWidget from './components/Chat/ChatWidget';
+import ChatButton from './components/Chat/ChatButton';
+import MapFAB from './components/Map/MapFAB';
+import MapModal from './components/Map/MapModal';
 import './index.css';
 
 // Protected Route Component
@@ -125,6 +129,23 @@ const AppRoutes: React.FC = () => {
     );
 };
 
+const GlobalWidgets: React.FC = () => {
+    const [isChatOpen, setIsChatOpen] = React.useState(false);
+    const [isMapOpen, setIsMapOpen] = React.useState(false);
+
+    return (
+        <>
+            {/* Chat Components */}
+            <ChatWidget isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+            <ChatButton isOpen={isChatOpen} onClick={() => setIsChatOpen(!isChatOpen)} />
+
+            {/* Map Components */}
+            <MapModal isOpen={isMapOpen} onClose={() => setIsMapOpen(false)} />
+            <MapFAB isOpen={isMapOpen} onClick={() => setIsMapOpen(true)} />
+        </>
+    );
+};
+
 const App: React.FC = () => {
     return (
         <ApolloProvider client={client}>
@@ -132,6 +153,7 @@ const App: React.FC = () => {
                 <CartProvider>
                     <Router>
                         <AppRoutes />
+                        <GlobalWidgets />
                     </Router>
                 </CartProvider>
             </AuthProvider>
