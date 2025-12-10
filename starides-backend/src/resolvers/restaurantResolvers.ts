@@ -1,7 +1,7 @@
 import { Restaurant, User } from '../models';
 import { Context, requireAuth, requireRole } from '../middleware/auth';
 
-interface RestaurantInput {
+export interface RestaurantInput {
     name: string;
     description: string;
     cuisine: string[];

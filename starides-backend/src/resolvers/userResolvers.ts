@@ -1,7 +1,7 @@
 import { User } from '../models';
 import { Context, requireAuth, requireRole } from '../middleware/auth';
 
-interface AddressInput {
+export interface AddressInput {
     label: string;
     street: string;
     city: string;

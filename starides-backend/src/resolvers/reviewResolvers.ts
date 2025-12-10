@@ -1,7 +1,7 @@
 import { Review, Order, User, Restaurant } from '../models';
 import { Context, requireAuth, requireRole } from '../middleware/auth';
 
-interface ReviewInput {
+export interface ReviewInput {
     orderId: string;
     restaurantRating: number;
     riderRating?: number;

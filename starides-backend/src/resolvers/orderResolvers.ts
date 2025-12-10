@@ -1,13 +1,13 @@
 import { Order, MenuItem, User, Restaurant } from '../models';
 import { Context, requireAuth, requireRole } from '../middleware/auth';
 
-interface OrderItemInput {
+export interface OrderItemInput {
     menuItemId: string;
     quantity: number;
     specialInstructions?: string;
 }
 
-interface CreateOrderInput {
+export interface CreateOrderInput {
     restaurantId: string;
     items: OrderItemInput[];
     paymentMethod: string;

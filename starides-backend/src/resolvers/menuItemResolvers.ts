@@ -1,7 +1,7 @@
 import { MenuItem, Restaurant } from '../models';
 import { Context, requireRole } from '../middleware/auth';
 
-interface MenuItemInput {
+export interface MenuItemInput {
     name: string;
     description: string;
     category: string;

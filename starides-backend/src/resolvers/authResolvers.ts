@@ -2,7 +2,7 @@ import { User } from '../models';
 import { hashPassword, comparePassword, generateToken } from '../utils/auth';
 import { Context, requireAuth } from '../middleware/auth';
 
-interface RegisterInput {
+export interface RegisterInput {
     email: string;
     password: string;
     firstName: string;
@@ -11,7 +11,7 @@ interface RegisterInput {
     role: string;
 }
 
-interface LoginInput {
+export interface LoginInput {
     email: string;
     password: string;
 }

@@ -3,11 +3,11 @@ import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import { emailService } from '../utils/emailService';
 
-interface RequestPasswordResetInput {
+export interface RequestPasswordResetInput {
     email: string;
 }
 
-interface ResetPasswordInput {
+export interface ResetPasswordInput {
     token: string;
     newPassword: string;
 }
