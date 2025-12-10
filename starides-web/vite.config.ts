@@ -8,5 +8,10 @@ export default defineConfig({
         port: 5173,
         host: '0.0.0.0', // Allow access from network
         open: true
-    }
+    },
+    build: {
+        outDir: 'dist',
+        emptyOutDir: true
+    },
+    base: '/'
 })
