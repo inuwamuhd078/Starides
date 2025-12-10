@@ -2,19 +2,20 @@ services:
   - type: web
     name: starides-backend
     env: node
-    root: starides-backend
+    # Removed rootDir to avoid potential schema validation issues or caching
     region: ohio
     plan: free
-    buildCommand: npm install && npm run build
-    startCommand: npm start
+    # Navigate to the directory manually in the commands
+    buildCommand: cd starides-backend && npm install && npm run build
+    startCommand: cd starides-backend && npm start
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 10000
       - key: MONGODB_URI
-        sync: false # You will need to enter your MongoDB Atlas connection string
+        sync: false
       - key: JWT_SECRET
         generateValue: true
       - key: CORS_ORIGIN
-        sync: false # You will need to enter your Vercel URL here
+        sync: false
