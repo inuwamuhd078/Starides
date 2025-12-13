@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap');
 
 :root {
-  /* Color Palette - Premium Sky Blue Theme */
+  /* Color Palette - Premium Sky Blue Theme (Dark Mode) */
   --color-primary: hsl(199, 89%, 48%);
   --color-primary-light: hsl(199, 89%, 58%);
   --color-primary-dark: hsl(199, 89%, 38%);
@@ -84,6 +84,52 @@
   --z-modal: 1050;
   --z-popover: 1060;
   --z-tooltip: 1070;
+}
+
+/* Light Mode Theme */
+[data-theme='light'] {
+  /* Light Mode Colors */
+  --color-bg-primary: #E8E4F3;
+  --color-bg-secondary: #FFFFFF;
+  --color-bg-tertiary: #F9FAFB;
+  --color-bg-elevated: #FFFFFF;
+
+  --color-text-primary: #1F2937;
+  --color-text-secondary: #6B7280;
+  --color-text-tertiary: #9CA3AF;
+
+  --color-border: #E5E7EB;
+  --color-border-light: #F3F4F6;
+
+  /* Light Mode Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.2);
+}
+
+/* Dark Mode Theme */
+[data-theme='dark'] {
+  /* Dark Mode Colors */
+  --color-bg-primary: hsl(220, 15%, 8%);
+  --color-bg-secondary: hsl(220, 15%, 12%);
+  --color-bg-tertiary: hsl(220, 15%, 16%);
+  --color-bg-elevated: hsl(220, 15%, 20%);
+
+  --color-text-primary: hsl(220, 20%, 98%);
+  --color-text-secondary: hsl(220, 10%, 75%);
+  --color-text-tertiary: hsl(220, 10%, 55%);
+
+  --color-border: hsl(220, 15%, 25%);
+  --color-border-light: hsl(220, 15%, 30%);
+
+  /* Dark Mode Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 20px rgba(14, 165, 233, 0.3);
 }
 
 /* Reset & Base Styles */

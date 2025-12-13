@@ -19,6 +19,9 @@ export const GET_MY_ORDERS = gql`
       orderNumber
       status
       total
+      subtotal
+      deliveryFee
+      tax
       createdAt
       estimatedDeliveryTime
       restaurant {

@@ -111,3 +111,22 @@ export const GET_VENDOR_STATS = gql`
     }
   }
 `;
+
+export const UPDATE_RESTAURANT_STATUS = gql`
+  mutation UpdateRestaurantStatus($id: ID!, $status: String!) {
+    updateRestaurantStatus(id: $id, status: $status) {
+      id
+      name
+      status
+    }
+  }
+`;
+
+export const TOGGLE_RESTAURANT_OPEN = gql`
+  mutation ToggleRestaurantOpen($id: ID!) {
+    toggleRestaurantOpen(id: $id) {
+      id
+      isOpen
+    }
+  }
+`;

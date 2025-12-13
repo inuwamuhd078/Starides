@@ -4,6 +4,8 @@ import { useMutation } from '@apollo/client';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { CREATE_ORDER } from '../../graphql/orders';
+import { ADD_ADDRESS } from '../../graphql/queries';
+import AddressSelector from '../../components/Map/AddressSelector';
 import './Checkout.css';
 
 const Checkout: React.FC = () => {
@@ -17,9 +19,12 @@ const Checkout: React.FC = () => {
         city: '',
         state: '',
         zipCode: '',
+        latitude: 0,
+        longitude: 0
     });
     const [specialInstructions, setSpecialInstructions] = useState('');
 
+    const [addAddress] = useMutation(ADD_ADDRESS);
     const [createOrder, { loading }] = useMutation(CREATE_ORDER, {
         onCompleted: (data) => {
             clearCart();
@@ -55,6 +60,34 @@ const Checkout: React.FC = () => {
         }
 
         try {
+            // 1. Save the address first
+            const addressLabel = `Delivery ${new Date().toLocaleTimeString()}`; // Unique label
+            const { data: addressData } = await addAddress({
+                variables: {
+                    input: {
+                        label: addressLabel,
+                        street: address.street,
+                        city: address.city,
+                        state: address.state,
+                        zipCode: address.zipCode,
+                        latitude: (address as any).latitude || 40.7128,
+                        longitude: (address as any).longitude || -74.0060,
+                        isDefault: true
+                    }
+                }
+            });
+
+            // 2. Find the new address ID
+            // The mutation returns the updated User object with addresses
+            const newAddress = addressData.addAddress.addresses.find(
+                (a: any) => a.label === addressLabel
+            );
+
+            if (!newAddress || !newAddress.id) {
+                throw new Error('Failed to save delivery address');
+            }
+
+            // 3. Create order with the new address ID
             await createOrder({
                 variables: {
                     input: {
@@ -62,15 +95,17 @@ const Checkout: React.FC = () => {
                         items: items.map(item => ({
                             menuItemId: item.menuItemId,
                             quantity: item.quantity,
+                            specialInstructions: item.specialInstructions // Pass item-level instructions if any
                         })),
                         paymentMethod,
-                        addressId: '0', // Using temporary address
+                        addressId: newAddress.id,
                         specialInstructions,
                     },
                 },
             });
         } catch (err) {
-            // Error handled by onError
+            console.error('Checkout error:', err);
+            alert('Failed to place order. Please try again.');
         }
     };
 
@@ -86,56 +121,18 @@ const Checkout: React.FC = () => {
                             {/* Delivery Address */}
                             <div className="form-section card">
                                 <h2 className="section-title">Delivery Address</h2>
-
-                                <div className="form-group">
-                                    <label className="form-label">Street Address</label>
-                                    <input
-                                        type="text"
-                                        className="input"
-                                        placeholder="123 Main St"
-                                        value={address.street}
-                                        onChange={(e) => setAddress({ ...address, street: e.target.value })}
-                                        required
-                                    />
-                                </div>
-
-                                <div className="form-row">
-                                    <div className="form-group">
-                                        <label className="form-label">City</label>
-                                        <input
-                                            type="text"
-                                            className="input"
-                                            placeholder="New York"
-                                            value={address.city}
-                                            onChange={(e) => setAddress({ ...address, city: e.target.value })}
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="form-group">
-                                        <label className="form-label">State</label>
-                                        <input
-                                            type="text"
-                                            className="input"
-                                            placeholder="NY"
-                                            value={address.state}
-                                            onChange={(e) => setAddress({ ...address, state: e.target.value })}
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="form-group">
-                                    <label className="form-label">ZIP Code</label>
-                                    <input
-                                        type="text"
-                                        className="input"
-                                        placeholder="10001"
-                                        value={address.zipCode}
-                                        onChange={(e) => setAddress({ ...address, zipCode: e.target.value })}
-                                        required
-                                    />
-                                </div>
+                                <AddressSelector
+                                    onAddressSelect={(newAddress) => {
+                                        setAddress({
+                                            street: newAddress.street,
+                                            city: newAddress.city,
+                                            state: newAddress.state,
+                                            zipCode: newAddress.zipCode,
+                                            latitude: newAddress.latitude,
+                                            longitude: newAddress.longitude
+                                        });
+                                    }}
+                                />
                             </div>
 
                             {/* Payment Method */}

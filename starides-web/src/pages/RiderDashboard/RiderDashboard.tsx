@@ -1,39 +1,67 @@
 import React from 'react';
 import { Link, Routes, Route } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import './RiderDashboard.css';
 
 const RiderDashboard: React.FC = () => {
-    const { logout } = useAuth();
+    const { logout, user } = useAuth();
+    const { theme, toggleTheme } = useTheme();
 
     return (
-        <div className="dashboard rider-dashboard">
-            <nav className="dashboard-nav">
-                <div className="container">
-                    <div className="nav-content">
-                        <Link to="/" className="logo">
-                            <span className="logo-icon">🏍️</span>
-                            <span className="logo-text">Starides Rider</span>
-                        </Link>
-                        <div className="nav-links">
-                            <Link to="/rider" className="nav-link">Dashboard</Link>
-                            <Link to="/rider/deliveries" className="nav-link">My Deliveries</Link>
-                            <Link to="/rider/available" className="nav-link">Available</Link>
-                            <Link to="/rider/earnings" className="nav-link">Earnings</Link>
-                            <button onClick={logout} className="btn btn-secondary">Logout</button>
+        <div className="admin-dashboard">
+            {/* Sidebar */}
+            <aside className="admin-sidebar">
+                <div className="sidebar-header">
+                    <Link to="/" className="sidebar-logo">
+                        <span className="sidebar-logo-icon">⭐</span>
+                        <span>STARIDES</span>
+                    </Link>
+                </div>
+
+                <nav className="sidebar-nav">
+                    <Link to="/rider" className="sidebar-nav-item active">
+                        <span className="sidebar-nav-icon">🏠</span>
+                        <span>Home</span>
+                    </Link>
+                    <Link to="/rider/deliveries" className="sidebar-nav-item">
+                        <span className="sidebar-nav-icon">📋</span>
+                        <span>My Deliveries</span>
+                    </Link>
+                </nav>
+
+                <div className="sidebar-footer">
+                    {/* Theme Toggle */}
+                    <button onClick={toggleTheme} className="logout-btn" style={{ marginBottom: '1rem' }}>
+                        <span>{theme === 'light' ? '🌙' : '☀️'}</span>
+                        <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+                    </button>
+
+                    <div className="user-profile">
+                        <div className="user-avatar">
+                            {user?.firstName?.charAt(0) || 'A'}
+                        </div>
+                        <div className="user-info">
+                            <p className="user-name">{user?.firstName || 'Abubakar'} {user?.lastName || 'Lamido'}</p>
+                            <p className="user-email">{user?.email || 'lamidoteo@gmail.com'}</p>
                         </div>
                     </div>
+                    <button onClick={logout} className="logout-btn">
+                        <span>🚪</span>
+                        <span>Logout</span>
+                    </button>
                 </div>
-            </nav>
+            </aside>
 
-            <div className="dashboard-content">
+            {/* Main Content */}
+            <main className="admin-main-content">
                 <Routes>
                     <Route index element={<RiderHome />} />
                     <Route path="deliveries" element={<RiderDeliveries />} />
                     <Route path="available" element={<AvailableDeliveries />} />
                     <Route path="earnings" element={<RiderEarnings />} />
                 </Routes>
-            </div>
+            </main>
         </div>
     );
 };
@@ -41,64 +69,48 @@ const RiderDashboard: React.FC = () => {
 const RiderHome: React.FC = () => {
 
     return (
-        <div className="container">
+        <div>
             <h1 className="page-title">Rider Dashboard</h1>
 
             <div className="stats-grid">
-                <div className="stat-card card">
+                <div className="stat-card">
                     <div className="stat-icon">📦</div>
-                    <div className="stat-info">
-                        <h3>Active Deliveries</h3>
-                        <p className="stat-value">0</p>
-                        <small>Currently delivering</small>
-                    </div>
+                    <p className="stat-value">0</p>
+                    <h3>Active Deliveries</h3>
                 </div>
 
-                <div className="stat-card card">
+                <div className="stat-card">
                     <div className="stat-icon">✅</div>
-                    <div className="stat-info">
-                        <h3>Completed Today</h3>
-                        <p className="stat-value">0</p>
-                        <small>Deliveries completed</small>
-                    </div>
+                    <p className="stat-value">0</p>
+                    <h3>Completed Today</h3>
                 </div>
 
-                <div className="stat-card card">
-                    <div className="stat-icon">💰</div>
-                    <div className="stat-info">
-                        <h3>Today's Earnings</h3>
-                        <p className="stat-value">$0.00</p>
-                        <small>Total earned today</small>
-                    </div>
+                <div className="stat-card">
+                    <div className="stat-icon">💵</div>
+                    <p className="stat-value">$0</p>
+                    <h3>Today's Earnings</h3>
                 </div>
 
-                <div className="stat-card card">
+                <div className="stat-card">
                     <div className="stat-icon">⭐</div>
-                    <div className="stat-info">
-                        <h3>Rating</h3>
-                        <p className="stat-value">-</p>
-                        <small>Customer ratings</small>
-                    </div>
+                    <p className="stat-value">-</p>
+                    <h3>Rating</h3>
                 </div>
             </div>
 
-            <div className="quick-actions">
-                <Link to="/rider/available" className="action-card card">
+            <div className="action-cards-grid">
+                <Link to="/rider/available" className="action-card">
                     <div className="action-icon">🔍</div>
                     <h3>Find Deliveries</h3>
                     <p>Browse available delivery requests</p>
+                    <span className="action-link">View Available →</span>
                 </Link>
 
-                <Link to="/rider/deliveries" className="action-card card">
+                <Link to="/rider/deliveries" className="action-card">
                     <div className="action-icon">📍</div>
                     <h3>My Deliveries</h3>
                     <p>Track your active deliveries</p>
-                </Link>
-
-                <Link to="/rider/earnings" className="action-card card">
-                    <div className="action-icon">💵</div>
-                    <h3>Earnings</h3>
-                    <p>View your earnings history</p>
+                    <span className="action-link">View Deliveries →</span>
                 </Link>
             </div>
         </div>
@@ -107,7 +119,7 @@ const RiderHome: React.FC = () => {
 
 const RiderDeliveries: React.FC = () => {
     return (
-        <div className="container">
+        <div>
             <h1 className="page-title">My Deliveries</h1>
             <div className="empty-state">
                 <p>No active deliveries</p>
@@ -120,7 +132,7 @@ const RiderDeliveries: React.FC = () => {
 
 const AvailableDeliveries: React.FC = () => {
     return (
-        <div className="container">
+        <div>
             <h1 className="page-title">Available Deliveries</h1>
             <div className="empty-state">
                 <p>No deliveries available right now</p>
@@ -133,7 +145,7 @@ const AvailableDeliveries: React.FC = () => {
 const RiderEarnings: React.FC = () => {
 
     return (
-        <div className="container">
+        <div>
             <h1 className="page-title">Earnings</h1>
 
             <div className="earnings-summary card">

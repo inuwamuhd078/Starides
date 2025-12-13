@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { ApolloProvider } from '@apollo/client';
 import { client } from './lib/apollo';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import Landing from './pages/Landing/Landing';
 import Restaurants from './pages/Restaurants/Restaurants';
 import Orders from './pages/Orders/Orders';
@@ -87,7 +88,18 @@ const AppRoutes: React.FC = () => {
 
             {/* Demo Routes (work without backend) */}
             <Route path="/demo/restaurants" element={<Restaurants />} />
-            <Route path="/demo/orders" element={<Orders />} />
+            {/* Protected Routes */}
+            <Route
+                path="/orders"
+                element={
+                    <ProtectedRoute allowedRoles={['CUSTOMER']}>
+                        <Orders />
+                    </ProtectedRoute>
+                }
+            />
+
+            {/* Demo Routes */}
+            <Route path="/demo/restaurants" element={<Restaurants />} />
 
             {/* Protected Routes */}
             <Route
@@ -149,14 +161,16 @@ const GlobalWidgets: React.FC = () => {
 const App: React.FC = () => {
     return (
         <ApolloProvider client={client}>
-            <AuthProvider>
-                <CartProvider>
-                    <Router>
-                        <AppRoutes />
-                        <GlobalWidgets />
-                    </Router>
-                </CartProvider>
-            </AuthProvider>
+            <ThemeProvider>
+                <AuthProvider>
+                    <CartProvider>
+                        <Router>
+                            <AppRoutes />
+                            <GlobalWidgets />
+                        </Router>
+                    </CartProvider>
+                </AuthProvider>
+            </ThemeProvider>
         </ApolloProvider>
     );
 };

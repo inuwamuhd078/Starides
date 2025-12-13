@@ -20,6 +20,10 @@ export const GET_RESTAURANT_WITH_MENU = gql`
         city
         state
         zipCode
+        coordinates {
+          latitude
+          longitude
+        }
       }
       phone
       email
@@ -46,6 +50,7 @@ export const ADD_ADDRESS = gql`
     addAddress(input: $input) {
       id
       addresses {
+        id
         label
         street
         city

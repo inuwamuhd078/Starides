@@ -1,42 +1,69 @@
 import React, { useState } from 'react';
 import { Link, Routes, Route } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import { useQuery, useMutation } from '@apollo/client';
-import { CREATE_RESTAURANT, GET_MY_RESTAURANT, CREATE_MENU_ITEM, GET_MENU_ITEMS, GET_VENDOR_STATS } from '../../graphql/restaurants';
-import AnalyticsChart from '../../components/AnalyticsChart';
+import { CREATE_RESTAURANT, GET_MY_RESTAURANT, CREATE_MENU_ITEM, GET_MENU_ITEMS, GET_VENDOR_STATS, TOGGLE_RESTAURANT_OPEN } from '../../graphql/restaurants';
 import './VendorDashboard.css';
 
 const VendorDashboard: React.FC = () => {
-    const { logout } = useAuth();
+    const { logout, user } = useAuth();
+    const { theme, toggleTheme } = useTheme();
 
     return (
-        <div className="dashboard vendor-dashboard">
-            <nav className="dashboard-nav">
-                <div className="container">
-                    <div className="nav-content">
-                        <Link to="/" className="logo">
-                            <span className="logo-icon">🍽️</span>
-                            <span className="logo-text">Starides Vendor</span>
-                        </Link>
-                        <div className="nav-links">
-                            <Link to="/vendor" className="nav-link">Dashboard</Link>
-                            <Link to="/vendor/orders" className="nav-link">Orders</Link>
-                            <Link to="/vendor/menu" className="nav-link">Menu</Link>
-                            <Link to="/vendor/restaurant" className="nav-link">Restaurant</Link>
-                            <button onClick={logout} className="btn btn-secondary">Logout</button>
+        <div className="vendor-dashboard">
+            {/* Sidebar */}
+            <aside className="vendor-sidebar">
+                <div className="sidebar-header">
+                    <Link to="/" className="sidebar-logo">
+                        <span className="sidebar-logo-icon">⭐</span>
+                        <span>STARIDES</span>
+                    </Link>
+                </div>
+
+                <nav className="sidebar-nav">
+                    <Link to="/vendor" className="sidebar-nav-item active">
+                        <span className="sidebar-nav-icon">🏠</span>
+                        <span>Home</span>
+                    </Link>
+                    <Link to="/vendor/orders" className="sidebar-nav-item">
+                        <span className="sidebar-nav-icon">📋</span>
+                        <span>My Orders</span>
+                    </Link>
+                </nav>
+
+                <div className="sidebar-footer">
+                    {/* Theme Toggle */}
+                    <button onClick={toggleTheme} className="logout-btn" style={{ marginBottom: '1rem' }}>
+                        <span>{theme === 'light' ? '🌙' : '☀️'}</span>
+                        <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+                    </button>
+
+                    <div className="user-profile">
+                        <div className="user-avatar">
+                            {user?.firstName?.charAt(0) || 'A'}
+                        </div>
+                        <div className="user-info">
+                            <p className="user-name">{user?.firstName || 'Abubakar'} {user?.lastName || 'Lamido'}</p>
+                            <p className="user-email">{user?.email || 'lamidoteo@gmail.com'}</p>
                         </div>
                     </div>
+                    <button onClick={logout} className="logout-btn">
+                        <span>🚪</span>
+                        <span>Logout</span>
+                    </button>
                 </div>
-            </nav>
+            </aside>
 
-            <div className="dashboard-content">
+            {/* Main Content */}
+            <main className="vendor-main-content">
                 <Routes>
                     <Route index element={<VendorHome />} />
                     <Route path="orders" element={<VendorOrders />} />
                     <Route path="menu" element={<VendorMenu />} />
                     <Route path="restaurant" element={<VendorRestaurant />} />
                 </Routes>
-            </div>
+            </main>
         </div>
     );
 };
@@ -48,87 +75,87 @@ const VendorHome: React.FC = () => {
         skip: !user?.restaurantId,
     });
 
-    const restaurant = data?.restaurantStats;
+    const { data: restaurantData } = useQuery(GET_MY_RESTAURANT, {
+        variables: { ownerId: user?.id },
+        skip: !user?.id,
+    });
+
+    const restaurant = restaurantData?.restaurants?.[0] || data?.restaurantStats;
+    const stats = data?.restaurantStats;
     const orders = data?.restaurantOrders || [];
 
-    // Process orders for chart (Revenue by Date)
-    const chartData = React.useMemo(() => {
-        const last7Days = [...Array(7)].map((_, i) => {
-            const d = new Date();
-            d.setDate(d.getDate() - i);
-            return d.toISOString().split('T')[0];
-        }).reverse();
-
-        return last7Days.map(date => {
-            const dayRevenue = orders
-                .filter((o: any) => o.createdAt.startsWith(date))
-                .reduce((sum: number, o: any) => sum + o.total, 0);
-            return {
-                name: new Date(date).toLocaleDateString('en-US', { weekday: 'short' }),
-                value: dayRevenue
-            };
-        });
-    }, [orders]);
+    // Calculate order stats
+    const pendingOrders = orders.filter((o: any) => o.status === 'PENDING' || o.status === 'CONFIRMED').length;
+    const completedOrders = orders.filter((o: any) => o.status === 'DELIVERED').length;
 
     return (
-        <div className="container">
-            <h1 className="page-title">Vendor Dashboard</h1>
+        <div>
+            {/* Restaurant Header */}
+            {restaurant && (
+                <div className="restaurant-header-section">
+                    <h1 className="restaurant-name">{restaurant.name || 'ABU EATS'}</h1>
+                    <span className={`status-badge status-${(restaurant.status || 'pending').toLowerCase()}`}>
+                        {restaurant.status || 'Pending Approval'}
+                    </span>
+                    {restaurant.status === 'ACTIVE' && (
+                        <span className="status-badge status-active">Active</span>
+                    )}
+                </div>
+            )}
 
             <div className="stats-grid">
-                <div className="stat-card card">
+                <div className="stat-card">
                     <div className="stat-icon">📦</div>
-                    <div className="stat-info">
-                        <h3>Total Orders</h3>
-                        <p className="stat-value">{restaurant?.totalOrders || 0}</p>
-                        <small>All time orders</small>
-                    </div>
+                    <p className="stat-value">{stats?.totalOrders || 0}</p>
+                    <h3>Total Orders</h3>
                 </div>
 
-                <div className="stat-card card">
-                    <div className="stat-icon">💰</div>
-                    <div className="stat-info">
-                        <h3>Revenue</h3>
-                        <p className="stat-value">${restaurant?.totalRevenue?.toFixed(2) || '0.00'}</p>
-                        <small>All time earnings</small>
-                    </div>
+                <div className="stat-card">
+                    <div className="stat-icon">⏰</div>
+                    <p className="stat-value">{pendingOrders}</p>
+                    <h3>Pending</h3>
                 </div>
 
-                <div className="stat-card card">
-                    <div className="stat-icon">⭐</div>
-                    <div className="stat-info">
-                        <h3>Avg. Order</h3>
-                        <p className="stat-value">${restaurant?.averageOrderValue?.toFixed(2) || '0.00'}</p>
-                        <small>Per order average</small>
-                    </div>
+                <div className="stat-card">
+                    <div className="stat-icon">✅</div>
+                    <p className="stat-value">{completedOrders}</p>
+                    <h3>Completed</h3>
+                </div>
+
+                <div className="stat-card">
+                    <div className="stat-icon">💵</div>
+                    <p className="stat-value">${stats?.totalRevenue?.toFixed(0) || '0'}</p>
+                    <h3>Revenue</h3>
                 </div>
             </div>
 
-            <div style={{ marginBottom: '2rem' }}>
-                <AnalyticsChart
-                    title="Revenue - Last 7 Days"
-                    data={chartData}
-                    color="#0ea5e9"
-                />
-            </div>
-
-            <div className="quick-actions">
-                <Link to="/vendor/restaurant" className="action-card card">
+            <div className="action-cards-grid">
+                <Link to="/vendor/menu" className="action-card">
                     <div className="action-icon">🏪</div>
-                    <h3>Manage Restaurant</h3>
-                    <p>Update info, hours, and settings</p>
+                    <h3>Manage Products</h3>
+                    <p>{data?.menuItems?.length || 1} of 1 products active</p>
+                    <span className="action-link">View Products →</span>
                 </Link>
 
-                <Link to="/vendor/menu" className="action-card card">
-                    <div className="action-icon">📋</div>
-                    <h3>Manage Menu</h3>
-                    <p>Add, edit, or remove menu items</p>
-                </Link>
-
-                <Link to="/vendor/orders" className="action-card card">
+                <Link to="/vendor/orders" className="action-card">
                     <div className="action-icon">📦</div>
                     <h3>View Orders</h3>
-                    <p>Track and manage incoming orders</p>
+                    <p>{pendingOrders} pending orders to process</p>
+                    <span className="action-link">View Orders →</span>
                 </Link>
+            </div>
+
+            {/* Recent Orders */}
+            <div className="recent-orders-section">
+                <h2>Recent Orders</h2>
+                {orders.length === 0 ? (
+                    <div className="empty-state">No orders yet</div>
+                ) : (
+                    <div>
+                        {/* Orders list would go here */}
+                        <div className="empty-state">No orders yet</div>
+                    </div>
+                )}
             </div>
         </div>
     );
@@ -144,7 +171,7 @@ const VendorOrders: React.FC = () => {
 
     if (!restaurant) {
         return (
-            <div className="container">
+            <div>
                 <h1 className="page-title">Orders</h1>
                 <div className="empty-state">
                     <p>No restaurant registered yet</p>
@@ -156,7 +183,7 @@ const VendorOrders: React.FC = () => {
     }
 
     return (
-        <div className="container">
+        <div>
             <h1 className="page-title">Orders</h1>
             <div className="empty-state">
                 <p>No orders yet</p>
@@ -232,7 +259,7 @@ const VendorMenu: React.FC = () => {
 
     if (!restaurant) {
         return (
-            <div className="container">
+            <div>
                 <h1 className="page-title">Menu Management</h1>
                 <div className="empty-state">
                     <p>No restaurant registered yet</p>
@@ -244,7 +271,7 @@ const VendorMenu: React.FC = () => {
     }
 
     return (
-        <div className="container">
+        <div>
             <div className="page-header">
                 <h1 className="page-title">Menu Management</h1>
                 <button className="btn btn-primary" onClick={() => setIsModalOpen(true)}>
@@ -401,6 +428,9 @@ const VendorRestaurant: React.FC = () => {
         refetchQueries: [{ query: GET_MY_RESTAURANT, variables: { ownerId: user?.id } }],
     });
 
+    // Import the Toggle Mutation
+    const [toggleOpen] = useMutation(TOGGLE_RESTAURANT_OPEN);
+
     const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -419,6 +449,15 @@ const VendorRestaurant: React.FC = () => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const value = e.target.type === 'number' ? parseFloat(e.target.value) : e.target.value;
         setFormData({ ...formData, [e.target.name]: value });
+    };
+
+    const handleToggleOpen = async (restaurantId: string) => {
+        try {
+            await toggleOpen({ variables: { id: restaurantId } });
+        } catch (err) {
+            console.error('Failed to toggle status:', err);
+            alert('Failed to update status');
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -451,9 +490,23 @@ const VendorRestaurant: React.FC = () => {
                 <div className="card">
                     <div className="restaurant-header">
                         <h2>{restaurant.name}</h2>
-                        <span className={`status-badge status-${restaurant.status?.toLowerCase() || 'pending'}`}>
-                            {restaurant.status || 'Pending'}
-                        </span>
+                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                            <span className={`status-badge status-${restaurant.status?.toLowerCase() || 'pending'}`}>
+                                {restaurant.status || 'Pending'}
+                            </span>
+                            {/* Open/Close Toggle */}
+                            <label className="toggle-switch" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                                <input
+                                    type="checkbox"
+                                    checked={restaurant.isOpen}
+                                    onChange={() => handleToggleOpen(restaurant.id)}
+                                    style={{ width: '20px', height: '20px' }}
+                                />
+                                <span style={{ fontWeight: 600, color: restaurant.isOpen ? 'var(--color-success)' : 'var(--color-text-secondary)' }}>
+                                    {restaurant.isOpen ? 'OPEN FOR ORDERS' : 'CLOSED'}
+                                </span>
+                            </label>
+                        </div>
                     </div>
 
                     <div className="restaurant-details">

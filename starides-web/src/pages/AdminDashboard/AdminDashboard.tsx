@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link, Routes, Route } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { useQuery, gql } from '@apollo/client';
-import AnalyticsChart from '../../components/AnalyticsChart';
+import { useTheme } from '../../context/ThemeContext';
+import { useQuery, useMutation, gql } from '@apollo/client';
 import './AdminDashboard.css';
 
 const GET_ADMIN_STATS = gql`
@@ -39,36 +39,63 @@ const GET_ADMIN_STATS = gql`
 `;
 
 const AdminDashboard: React.FC = () => {
-    const { logout } = useAuth();
+    const { logout, user } = useAuth();
+    const { theme, toggleTheme } = useTheme();
 
     return (
-        <div className="dashboard admin-dashboard">
-            <nav className="dashboard-nav">
-                <div className="container">
-                    <div className="nav-content">
-                        <Link to="/" className="logo">
-                            <span className="logo-icon">⚙️</span>
-                            <span className="logo-text">Starides Admin</span>
-                        </Link>
-                        <div className="nav-links">
-                            <Link to="/admin" className="nav-link">Dashboard</Link>
-                            <Link to="/admin/users" className="nav-link">Users</Link>
-                            <Link to="/admin/restaurants" className="nav-link">Restaurants</Link>
-                            <Link to="/admin/orders" className="nav-link">Orders</Link>
-                            <button onClick={logout} className="btn btn-secondary">Logout</button>
+        <div className="admin-dashboard">
+            {/* Sidebar */}
+            <aside className="admin-sidebar">
+                <div className="sidebar-header">
+                    <Link to="/" className="sidebar-logo">
+                        <span className="sidebar-logo-icon">⭐</span>
+                        <span>STARIDES</span>
+                    </Link>
+                </div>
+
+                <nav className="sidebar-nav">
+                    <Link to="/admin" className="sidebar-nav-item active">
+                        <span className="sidebar-nav-icon">🏠</span>
+                        <span>Home</span>
+                    </Link>
+                    <Link to="/admin/orders" className="sidebar-nav-item">
+                        <span className="sidebar-nav-icon">📋</span>
+                        <span>My Orders</span>
+                    </Link>
+                </nav>
+
+                <div className="sidebar-footer">
+                    {/* Theme Toggle */}
+                    <button onClick={toggleTheme} className="logout-btn" style={{ marginBottom: '1rem' }}>
+                        <span>{theme === 'light' ? '🌙' : '☀️'}</span>
+                        <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+                    </button>
+
+                    <div className="user-profile">
+                        <div className="user-avatar">
+                            {user?.firstName?.charAt(0) || 'A'}
+                        </div>
+                        <div className="user-info">
+                            <p className="user-name">{user?.firstName || 'Abubakar'} {user?.lastName || 'Lamido'}</p>
+                            <p className="user-email">{user?.email || 'lamidoteo@gmail.com'}</p>
                         </div>
                     </div>
+                    <button onClick={logout} className="logout-btn">
+                        <span>🚪</span>
+                        <span>Logout</span>
+                    </button>
                 </div>
-            </nav>
+            </aside>
 
-            <div className="dashboard-content">
+            {/* Main Content */}
+            <main className="admin-main-content">
                 <Routes>
                     <Route index element={<AdminHome />} />
                     <Route path="users" element={<AdminUsers />} />
                     <Route path="restaurants" element={<AdminRestaurants />} />
                     <Route path="orders" element={<AdminOrders />} />
                 </Routes>
-            </div>
+            </main>
         </div>
     );
 };
@@ -76,94 +103,71 @@ const AdminDashboard: React.FC = () => {
 const AdminHome: React.FC = () => {
     const { data } = useQuery(GET_ADMIN_STATS);
     const stats = data?.adminStats;
-    const orders = data?.orders || [];
+    const restaurants = data?.restaurants || [];
+    const users = data?.users || [];
 
-    // Process orders for chart (Revenue by Date)
-    const chartData = React.useMemo(() => {
-        const last7Days = [...Array(7)].map((_, i) => {
-            const d = new Date();
-            d.setDate(d.getDate() - i);
-            return d.toISOString().split('T')[0];
-        }).reverse();
-
-        return last7Days.map(date => {
-            const dayRevenue = orders
-                .filter((o: any) => o.createdAt.startsWith(date))
-                .reduce((sum: number, o: any) => sum + o.total, 0);
-            return {
-                name: new Date(date).toLocaleDateString('en-US', { weekday: 'short' }),
-                value: dayRevenue
-            };
-        });
-    }, [orders]);
+    // Count pending vendors and riders
+    const pendingVendors = restaurants.filter((r: any) => r.status === 'PENDING').length;
+    const pendingRiders = users.filter((u: any) => u.role === 'RIDER' && !u.isActive).length;
+    const totalRiders = users.filter((u: any) => u.role === 'RIDER').length;
+    const totalVendors = restaurants.length;
+    const totalUsers = users.filter((u: any) => u.role === 'CUSTOMER').length;
 
     return (
-        <div className="container">
+        <div>
             <h1 className="page-title">Admin Dashboard</h1>
 
             <div className="stats-grid">
-                <div className="stat-card card">
+                <div className="stat-card">
                     <div className="stat-icon">👥</div>
-                    <div className="stat-info">
-                        <h3>Total Users</h3>
-                        <p className="stat-value">{stats?.totalCustomers || 0}</p>
-                        <small>All registered users</small>
-                    </div>
+                    <p className="stat-value">{totalUsers}</p>
+                    <h3>Users</h3>
                 </div>
 
-                <div className="stat-card card">
+                <div className="stat-card">
                     <div className="stat-icon">🏪</div>
-                    <div className="stat-info">
-                        <h3>Restaurants</h3>
-                        <p className="stat-value">{data?.restaurants?.length || 0}</p>
-                        <small>Active restaurants</small>
-                    </div>
+                    <p className="stat-value">{totalVendors}</p>
+                    <h3>Vendors</h3>
                 </div>
 
-                <div className="stat-card card">
+                <div className="stat-card">
+                    <div className="stat-icon">⏳</div>
+                    <p className="stat-value">{pendingVendors}</p>
+                    <h3>Pending</h3>
+                </div>
+
+                <div className="stat-card">
+                    <div className="stat-icon">🚴</div>
+                    <p className="stat-value">{totalRiders}</p>
+                    <h3>Riders</h3>
+                </div>
+
+                <div className="stat-card">
                     <div className="stat-icon">📦</div>
-                    <div className="stat-info">
-                        <h3>Total Orders</h3>
-                        <p className="stat-value">{stats?.totalOrders || 0}</p>
-                        <small>All time orders</small>
-                    </div>
+                    <p className="stat-value">{stats?.totalOrders || 0}</p>
+                    <h3>Orders</h3>
                 </div>
 
-                <div className="stat-card card">
-                    <div className="stat-icon">💰</div>
-                    <div className="stat-info">
-                        <h3>Revenue</h3>
-                        <p className="stat-value">${stats?.totalRevenue?.toFixed(2) || '0.00'}</p>
-                        <small>Platform revenue</small>
-                    </div>
+                <div className="stat-card">
+                    <div className="stat-icon">💵</div>
+                    <p className="stat-value">${stats?.totalRevenue?.toFixed(0) || '0'}</p>
+                    <h3>Revenue</h3>
                 </div>
             </div>
 
-            <div style={{ marginBottom: '2rem' }}>
-                <AnalyticsChart
-                    title="Platform Revenue - Last 7 Days"
-                    data={chartData}
-                    color="#8b5cf6"
-                />
-            </div>
-
-            <div className="quick-actions">
-                <Link to="/admin/users" className="action-card card">
-                    <div className="action-icon">👥</div>
-                    <h3>Manage Users</h3>
-                    <p>View and manage all users</p>
-                </Link>
-
-                <Link to="/admin/restaurants" className="action-card card">
+            <div className="action-cards-grid">
+                <Link to="/admin/restaurants" className="action-card">
                     <div className="action-icon">🏪</div>
-                    <h3>Manage Restaurants</h3>
-                    <p>Approve and manage restaurants</p>
+                    <h3>Manage Vendors</h3>
+                    <p>{pendingVendors} vendors pending approval</p>
+                    <span className="action-link">View Vendors →</span>
                 </Link>
 
-                <Link to="/admin/orders" className="action-card card">
-                    <div className="action-icon">📦</div>
-                    <h3>View Orders</h3>
-                    <p>Monitor all platform orders</p>
+                <Link to="/admin/users" className="action-card">
+                    <div className="action-icon">🚴</div>
+                    <h3>Manage Riders</h3>
+                    <p>{pendingRiders} riders pending verification</p>
+                    <span className="action-link">View Riders →</span>
                 </Link>
             </div>
         </div>
@@ -175,12 +179,12 @@ const AdminUsers: React.FC = () => {
     const users = data?.users || [];
 
     return (
-        <div className="container">
+        <div>
             <h1 className="page-title">User Management</h1>
 
             {loading && <p>Loading users...</p>}
 
-            <div className="users-table card">
+            <div className="users-table">
                 <table>
                     <thead>
                         <tr>
@@ -215,50 +219,223 @@ const AdminUsers: React.FC = () => {
 };
 
 const AdminRestaurants: React.FC = () => {
-    const { data, loading } = useQuery(GET_ADMIN_STATS);
+    const [filter, setFilter] = React.useState<string>('ALL');
+    const [message, setMessage] = React.useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+    const { data, loading, refetch } = useQuery(gql`
+        query GetAllRestaurants {
+            restaurants {
+                id
+                name
+                status
+                cuisine
+                phone
+                email
+                address {
+                    city
+                    state
+                }
+                owner {
+                    id
+                    firstName
+                    lastName
+                    email
+                }
+            }
+        }
+    `);
+
+    const [updateRestaurantStatus] = useMutation(gql`
+        mutation UpdateRestaurantStatus($id: ID!, $status: String!) {
+            updateRestaurantStatus(id: $id, status: $status) {
+                id
+                name
+                status
+            }
+        }
+    `);
+
+    const handleStatusUpdate = async (restaurantId: string, newStatus: string, restaurantName: string) => {
+        try {
+            await updateRestaurantStatus({
+                variables: { id: restaurantId, status: newStatus }
+            });
+            setMessage({
+                type: 'success',
+                text: `${restaurantName} has been ${newStatus.toLowerCase()}`
+            });
+            refetch();
+            setTimeout(() => setMessage(null), 3000);
+        } catch (error: any) {
+            setMessage({
+                type: 'error',
+                text: error.message || 'Failed to update restaurant status'
+            });
+            setTimeout(() => setMessage(null), 3000);
+        }
+    };
+
+    if (loading) return <div>Loading restaurants...</div>;
+
     const restaurants = data?.restaurants || [];
+    const filteredRestaurants = filter === 'ALL'
+        ? restaurants
+        : restaurants.filter((r: any) => r.status === filter);
+
+    const pendingCount = restaurants.filter((r: any) => r.status === 'PENDING').length;
+    const approvedCount = restaurants.filter((r: any) => r.status === 'APPROVED').length;
 
     return (
-        <div className="container">
+        <div>
             <h1 className="page-title">Restaurant Management</h1>
 
-            {loading && <p>Loading restaurants...</p>}
+            {/* Success/Error Message */}
+            {message && (
+                <div style={{
+                    padding: '1rem',
+                    marginBottom: '1.5rem',
+                    borderRadius: '0.5rem',
+                    background: message.type === 'success' ? '#D1FAE5' : '#FEE2E2',
+                    color: message.type === 'success' ? '#065F46' : '#991B1B',
+                    border: `1px solid ${message.type === 'success' ? '#A7F3D0' : '#FECACA'}`
+                }}>
+                    {message.text}
+                </div>
+            )}
 
-            <div className="restaurants-table card">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Restaurant Name</th>
-                            <th>Owner</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {restaurants.map((restaurant: any) => (
-                            <tr key={restaurant.id}>
-                                <td>{restaurant.name}</td>
-                                <td>{restaurant.owner.firstName} {restaurant.owner.lastName}</td>
-                                <td>
-                                    <span className={`status-badge status-${restaurant.status.toLowerCase()}`}>
-                                        {restaurant.status}
-                                    </span>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-
-                {restaurants.length === 0 && !loading && (
-                    <div className="empty-state">No restaurants found</div>
-                )}
+            {/* Filter Tabs */}
+            <div style={{
+                display: 'flex',
+                gap: '1rem',
+                marginBottom: '2rem',
+                borderBottom: '2px solid var(--color-border)'
+            }}>
+                <button
+                    onClick={() => setFilter('ALL')}
+                    style={{
+                        padding: '0.75rem 1.5rem',
+                        background: 'transparent',
+                        border: 'none',
+                        borderBottom: filter === 'ALL' ? '2px solid #6366F1' : '2px solid transparent',
+                        color: filter === 'ALL' ? '#6366F1' : 'var(--color-text-secondary)',
+                        fontWeight: filter === 'ALL' ? '600' : '400',
+                        cursor: 'pointer',
+                        marginBottom: '-2px'
+                    }}
+                >
+                    All ({restaurants.length})
+                </button>
+                <button
+                    onClick={() => setFilter('PENDING')}
+                    style={{
+                        padding: '0.75rem 1.5rem',
+                        background: 'transparent',
+                        border: 'none',
+                        borderBottom: filter === 'PENDING' ? '2px solid #6366F1' : '2px solid transparent',
+                        color: filter === 'PENDING' ? '#6366F1' : 'var(--color-text-secondary)',
+                        fontWeight: filter === 'PENDING' ? '600' : '400',
+                        cursor: 'pointer',
+                        marginBottom: '-2px'
+                    }}
+                >
+                    Pending ({pendingCount})
+                </button>
+                <button
+                    onClick={() => setFilter('APPROVED')}
+                    style={{
+                        padding: '0.75rem 1.5rem',
+                        background: 'transparent',
+                        border: 'none',
+                        borderBottom: filter === 'APPROVED' ? '2px solid #6366F1' : '2px solid transparent',
+                        color: filter === 'APPROVED' ? '#6366F1' : 'var(--color-text-secondary)',
+                        fontWeight: filter === 'APPROVED' ? '600' : '400',
+                        cursor: 'pointer',
+                        marginBottom: '-2px'
+                    }}
+                >
+                    Approved ({approvedCount})
+                </button>
             </div>
+
+            {/* Restaurants Grid */}
+            <div style={{ display: 'grid', gap: '1.5rem' }}>
+                {filteredRestaurants.map((restaurant: any) => (
+                    <div key={restaurant.id} style={{
+                        background: 'var(--color-bg-secondary)',
+                        border: '1px solid var(--color-border)',
+                        borderRadius: '1rem',
+                        padding: '1.5rem',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                    }}>
+                        <div style={{ flex: 1 }}>
+                            <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--color-text-primary)' }}>
+                                {restaurant.name}
+                            </h3>
+                            <p style={{ margin: '0 0 0.5rem 0', color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}>
+                                Owner: {restaurant.owner.firstName} {restaurant.owner.lastName} ({restaurant.owner.email})
+                            </p>
+                            <p style={{ margin: '0 0 0.5rem 0', color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}>
+                                Location: {restaurant.address.city}, {restaurant.address.state}
+                            </p>
+                            <p style={{ margin: '0', color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}>
+                                Cuisine: {restaurant.cuisine.join(', ')}
+                            </p>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <span className={`status-badge status-${restaurant.status.toLowerCase()}`}>
+                                {restaurant.status}
+                            </span>
+                            {restaurant.status === 'PENDING' && (
+                                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                    <button
+                                        onClick={() => handleStatusUpdate(restaurant.id, 'APPROVED', restaurant.name)}
+                                        style={{
+                                            padding: '0.5rem 1rem',
+                                            background: '#10B981',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '0.5rem',
+                                            cursor: 'pointer',
+                                            fontWeight: '500'
+                                        }}
+                                    >
+                                        ✓ Approve
+                                    </button>
+                                    <button
+                                        onClick={() => handleStatusUpdate(restaurant.id, 'REJECTED', restaurant.name)}
+                                        style={{
+                                            padding: '0.5rem 1rem',
+                                            background: '#EF4444',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '0.5rem',
+                                            cursor: 'pointer',
+                                            fontWeight: '500'
+                                        }}
+                                    >
+                                        ✕ Reject
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {filteredRestaurants.length === 0 && (
+                <div className="empty-state">
+                    No {filter.toLowerCase()} restaurants found
+                </div>
+            )}
         </div>
     );
 };
 
 const AdminOrders: React.FC = () => {
     return (
-        <div className="container">
+        <div>
             <h1 className="page-title">Order Management</h1>
             <div className="empty-state">
                 <p>No orders yet</p>

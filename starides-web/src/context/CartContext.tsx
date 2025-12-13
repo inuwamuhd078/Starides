@@ -7,6 +7,7 @@ interface CartItem {
     quantity: number;
     restaurantId: string;
     restaurantName: string;
+    specialInstructions?: string;
 }
 
 interface CartContextType {

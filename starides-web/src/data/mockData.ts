@@ -210,6 +210,18 @@ export const mockOrders = [
             name: 'Burger Haven',
             logo: '🍔',
         },
+        restaurantLocation: {
+            latitude: 40.7128,
+            longitude: -74.0060
+        },
+        customerLocation: {
+            latitude: 40.7200,
+            longitude: -74.0100
+        },
+        riderLocation: {
+            latitude: 40.7150,
+            longitude: -74.0080
+        },
         items: [
             {
                 name: 'Classic Burger',

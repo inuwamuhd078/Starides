@@ -28,9 +28,13 @@ const RestaurantMap: React.FC<RestaurantMapProps> = ({ restaurant, height = '400
     const [showInfo, setShowInfo] = useState(true);
 
     const center = {
-        lat: restaurant.address.coordinates.latitude,
-        lng: restaurant.address.coordinates.longitude
+        lat: restaurant.address?.coordinates?.latitude || 0,
+        lng: restaurant.address?.coordinates?.longitude || 0
     };
+
+    if (!restaurant.address?.coordinates) {
+        return null;
+    }
 
     return (
         <div className="restaurant-map-wrapper" style={{ height }}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { GoogleMap, LoadScript } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';
 
@@ -27,7 +27,11 @@ const MapContainer: React.FC<MapContainerProps> = ({
     onClick,
     className = 'map-container'
 }) => {
-    if (!GOOGLE_MAPS_API_KEY) {
+    const isValidKey = GOOGLE_MAPS_API_KEY &&
+        GOOGLE_MAPS_API_KEY !== 'your_google_maps_api_key_here' &&
+        GOOGLE_MAPS_API_KEY !== 'your_key_here';
+
+    if (!isValidKey) {
         return (
             <div className={`${className} map-error`}>
                 <div className="error-content">
@@ -40,33 +44,44 @@ const MapContainer: React.FC<MapContainerProps> = ({
         );
     }
 
+    const { isLoaded, loadError } = useJsApiLoader({
+        googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+        libraries,
+    });
+
+    if (loadError) {
+        return (
+            <div className={`${className} map-error`}>
+                <p>Error loading map</p>
+            </div>
+        );
+    }
+
+    if (!isLoaded) {
+        return (
+            <div className={`${className} map-loading`}>
+                <div className="loading-spinner"></div>
+                <p>Loading map...</p>
+            </div>
+        );
+    }
+
     return (
-        <LoadScript
-            googleMapsApiKey={GOOGLE_MAPS_API_KEY}
-            libraries={libraries}
-            loadingElement={
-                <div className={`${className} map-loading`}>
-                    <div className="loading-spinner"></div>
-                    <p>Loading map...</p>
-                </div>
-            }
+        <GoogleMap
+            mapContainerClassName={className}
+            center={center}
+            zoom={zoom}
+            onLoad={onLoad}
+            onClick={onClick}
+            options={{
+                zoomControl: true,
+                streetViewControl: false,
+                mapTypeControl: false,
+                fullscreenControl: true,
+            }}
         >
-            <GoogleMap
-                mapContainerClassName={className}
-                center={center}
-                zoom={zoom}
-                onLoad={onLoad}
-                onClick={onClick}
-                options={{
-                    zoomControl: true,
-                    streetViewControl: false,
-                    mapTypeControl: false,
-                    fullscreenControl: true,
-                }}
-            >
-                {children}
-            </GoogleMap>
-        </LoadScript>
+            {children}
+        </GoogleMap>
     );
 };
 

@@ -91,11 +91,11 @@ const RestaurantDetail: React.FC = () => {
                         <div className="restaurant-stats">
                             <div className="stat">
                                 <span className="icon">⭐</span>
-                                <span>{restaurant.rating.toFixed(1)} ({restaurant.totalReviews} reviews)</span>
+                                <span>{(restaurant.rating || 0).toFixed(1)} ({restaurant.totalReviews || 0} reviews)</span>
                             </div>
                             <div className="stat">
                                 <span className="icon">🚚</span>
-                                <span>${restaurant.deliveryFee.toFixed(2)} delivery</span>
+                                <span>${(restaurant.deliveryFee || 0).toFixed(2)} delivery</span>
                             </div>
                             <div className="stat">
                                 <span className="icon">⏱️</span>
@@ -103,12 +103,12 @@ const RestaurantDetail: React.FC = () => {
                             </div>
                             <div className="stat">
                                 <span className="icon">💵</span>
-                                <span>${restaurant.minimumOrder.toFixed(2)} minimum</span>
+                                <span>${(restaurant.minimumOrder || 0).toFixed(2)} minimum</span>
                             </div>
                         </div>
 
                         <div className="restaurant-cuisines">
-                            {restaurant.cuisine.map((c: string, i: number) => (
+                            {(restaurant.cuisine || []).map((c: string, i: number) => (
                                 <span key={i} className="cuisine-badge">{c}</span>
                             ))}
                         </div>
