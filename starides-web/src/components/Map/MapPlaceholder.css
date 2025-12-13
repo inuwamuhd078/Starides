@@ -1,0 +1,87 @@
+.map-placeholder {
+    width: 100%;
+    min-height: 200px;
+    background-color: #f0f2f5;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 2px dashed #e4e6eb;
+    color: #65676b;
+    position: relative;
+    overflow: hidden;
+}
+
+.map-placeholder::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(#e4e6eb 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.5;
+    z-index: 0;
+}
+
+.placeholder-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.placeholder-content .icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.placeholder-content h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+    color: #333;
+}
+
+.placeholder-content .sub-text {
+    font-size: 0.9rem;
+    margin: 0;
+    opacity: 0.8;
+}
+
+.map-placeholder.loading .spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid #e4e6eb;
+    border-top: 3px solid #1877f2;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+[data-theme="dark"] .map-placeholder {
+    background-color: #242526;
+    border-color: #3a3b3c;
+    color: #b0b3b8;
+}
+
+[data-theme="dark"] .map-placeholder::before {
+    background-image: radial-gradient(#3a3b3c 1px, transparent 1px);
+}
+
+[data-theme="dark"] .placeholder-content h3 {
+    color: #e4e6eb;
+}

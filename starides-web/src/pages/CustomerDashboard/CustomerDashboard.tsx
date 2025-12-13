@@ -11,28 +11,50 @@ const CustomerDashboard: React.FC = () => {
     const { logout, user } = useAuth();
     const { theme, toggleTheme } = useTheme();
     const { getItemCount } = useCart();
+    const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+
+    const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+    const closeSidebar = () => setIsSidebarOpen(false);
 
     return (
-        <div className="admin-dashboard">
+        <div className="admin-dashboard customer-dashboard">
+            {/* Mobile Hamburger Button */}
+            <button
+                className="mobile-menu-btn"
+                onClick={toggleSidebar}
+                aria-label="Toggle Menu"
+            >
+                <span className="hamburger-icon">☰</span>
+            </button>
+
+            {/* Mobile Overlay */}
+            {isSidebarOpen && (
+                <div className="sidebar-overlay" onClick={closeSidebar}></div>
+            )}
+
             {/* Sidebar */}
-            <aside className="admin-sidebar">
+            <aside className={`admin-sidebar customer-sidebar ${isSidebarOpen ? 'open' : ''}`}>
                 <div className="sidebar-header">
-                    <Link to="/" className="sidebar-logo">
+                    <Link to="/" className="sidebar-logo" onClick={closeSidebar}>
                         <span className="sidebar-logo-icon">⭐</span>
                         <span>STARIDES</span>
                     </Link>
+                    {/* Close button for mobile */}
+                    <button className="close-sidebar-btn hidden-desktop" onClick={closeSidebar}>
+                        ✕
+                    </button>
                 </div>
 
                 <nav className="sidebar-nav">
-                    <Link to="/customer" className="sidebar-nav-item active">
+                    <Link to="/customer" className="sidebar-nav-item" onClick={closeSidebar}>
                         <span className="sidebar-nav-icon">🏠</span>
                         <span>Home</span>
                     </Link>
-                    <Link to="/orders" className="sidebar-nav-item">
+                    <Link to="/orders" className="sidebar-nav-item" onClick={closeSidebar}>
                         <span className="sidebar-nav-icon">📋</span>
                         <span>My Orders</span>
                     </Link>
-                    <Link to="/cart" className="sidebar-nav-item">
+                    <Link to="/cart" className="sidebar-nav-item" onClick={closeSidebar}>
                         <span className="sidebar-nav-icon">🛒</span>
                         <span>Cart ({getItemCount()})</span>
                     </Link>
@@ -50,8 +72,8 @@ const CustomerDashboard: React.FC = () => {
                             {user?.firstName?.charAt(0) || 'A'}
                         </div>
                         <div className="user-info">
-                            <p className="user-name">{user?.firstName || 'Abubakar'} {user?.lastName || 'Lamido'}</p>
-                            <p className="user-email">{user?.email || 'lamidoteo@gmail.com'}</p>
+                            <p className="user-name">{user?.firstName || 'User'} {user?.lastName || ''}</p>
+                            <p className="user-email">{user?.email}</p>
                         </div>
                     </div>
                     <button onClick={logout} className="logout-btn">

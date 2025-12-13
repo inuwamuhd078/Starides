@@ -74,7 +74,8 @@ const Register: React.FC = () => {
                 },
             });
         } catch (err) {
-            // Error handled by onError callback
+            console.error("Registration Error:", err);
+            setError(err instanceof Error ? err.message : 'An unexpected error occurred');
         }
     };
 

@@ -10,23 +10,45 @@ const VendorDashboard: React.FC = () => {
     const { logout, user } = useAuth();
     const { theme, toggleTheme } = useTheme();
 
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+    const closeSidebar = () => setIsSidebarOpen(false);
+
     return (
         <div className="vendor-dashboard">
+            {/* Mobile Hamburger Button */}
+            <button
+                className="mobile-menu-btn"
+                onClick={toggleSidebar}
+                aria-label="Toggle Menu"
+            >
+                <span className="hamburger-icon">☰</span>
+            </button>
+
+            {/* Mobile Overlay */}
+            {isSidebarOpen && (
+                <div className="sidebar-overlay" onClick={closeSidebar}></div>
+            )}
+
             {/* Sidebar */}
-            <aside className="vendor-sidebar">
+            <aside className={`vendor-sidebar ${isSidebarOpen ? 'open' : ''}`}>
                 <div className="sidebar-header">
-                    <Link to="/" className="sidebar-logo">
+                    <Link to="/" className="sidebar-logo" onClick={closeSidebar}>
                         <span className="sidebar-logo-icon">⭐</span>
                         <span>STARIDES</span>
                     </Link>
+                    <button className="close-sidebar-btn hidden-desktop" onClick={closeSidebar}>
+                        ✕
+                    </button>
                 </div>
 
                 <nav className="sidebar-nav">
-                    <Link to="/vendor" className="sidebar-nav-item active">
+                    <Link to="/vendor" className="sidebar-nav-item active" onClick={closeSidebar}>
                         <span className="sidebar-nav-icon">🏠</span>
                         <span>Home</span>
                     </Link>
-                    <Link to="/vendor/orders" className="sidebar-nav-item">
+                    <Link to="/vendor/orders" className="sidebar-nav-item" onClick={closeSidebar}>
                         <span className="sidebar-nav-icon">📋</span>
                         <span>My Orders</span>
                     </Link>

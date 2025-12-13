@@ -5,6 +5,7 @@ import { GET_RESTAURANT_WITH_MENU } from '../../graphql/queries';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import RestaurantMap from '../../components/Map/RestaurantMap';
+import ImagePlaceholder from '../../components/Common/ImagePlaceholder';
 import './RestaurantDetail.css';
 
 const RestaurantDetail: React.FC = () => {
@@ -83,6 +84,13 @@ const RestaurantDetail: React.FC = () => {
 
             {/* Restaurant Info */}
             <div className="restaurant-hero">
+                {restaurant.coverImage ? (
+                    <div className="hero-bg" style={{ backgroundImage: `url(${restaurant.coverImage})` }}></div>
+                ) : (
+                    <div className="hero-bg-placeholder">
+                        <ImagePlaceholder icon="🏪" text={restaurant.name} height="300px" />
+                    </div>
+                )}
                 <div className="container">
                     <div className="hero-content">
                         <h1 className="restaurant-title">{restaurant.name}</h1>
@@ -140,6 +148,13 @@ const RestaurantDetail: React.FC = () => {
                             <div className="menu-items">
                                 {items.map((item: any) => (
                                     <div key={item.id} className="menu-item card">
+                                        <div className="item-image-container">
+                                            {item.image ? (
+                                                <img src={item.image} alt={item.name} className="item-image" />
+                                            ) : (
+                                                <ImagePlaceholder icon="🍔" height="120px" width="120px" shape="rectangle" />
+                                            )}
+                                        </div>
                                         <div className="item-info">
                                             <h4 className="item-name">{item.name}</h4>
                                             <p className="item-description">{item.description}</p>

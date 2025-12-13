@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { gql } from '@apollo/client';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
+import ImagePlaceholder from '../../components/Common/ImagePlaceholder';
 import './BrowseRestaurants.css';
 
 const GET_RESTAURANTS = gql`
@@ -132,11 +133,15 @@ const BrowseRestaurants: React.FC = () => {
                                     to={`/restaurant/${restaurant.id}`}
                                     className="restaurant-card card"
                                 >
+                                    import ImagePlaceholder from '../../components/Common/ImagePlaceholder';
+
+                                    // ...
+
                                     <div className="restaurant-image">
                                         {restaurant.logo ? (
                                             <img src={restaurant.logo} alt={restaurant.name} />
                                         ) : (
-                                            <div className="placeholder-image">🍽️</div>
+                                            <ImagePlaceholder icon="🍽️" text={restaurant.cuisine[0]} height="100%" />
                                         )}
                                         {!restaurant.isOpen && (
                                             <div className="closed-badge">Closed</div>

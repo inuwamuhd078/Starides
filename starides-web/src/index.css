@@ -429,13 +429,57 @@ body {
 }
 
 /* Responsive */
+/* Responsive Typography */
 @media (max-width: 768px) {
   :root {
+    --text-3xl: 1.5rem;
     --text-4xl: 1.875rem;
     --text-5xl: 2.25rem;
+    --spacing-xl: 1.5rem;
+    --spacing-2xl: 2rem;
   }
 
   .container {
     padding: 0 var(--spacing-md);
+  }
+}
+
+/* Premium Glassmorphism Utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.glass-panel-heavy {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Mobile Utilities */
+.hidden-desktop {
+  display: none;
+}
+
+.hidden-mobile {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .hidden-desktop {
+    display: block;
+  }
+
+  .hidden-mobile {
+    display: none;
+  }
+
+  .btn {
+    min-height: 44px;
+    /* Touch target size */
   }
 }
