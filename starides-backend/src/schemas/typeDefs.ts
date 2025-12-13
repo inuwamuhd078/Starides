@@ -67,6 +67,7 @@ export const typeDefs = `#graphql
   }
 
   type Address {
+    id: ID!
     label: String!
     street: String!
     city: String!

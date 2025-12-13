@@ -38,7 +38,14 @@ async function startServer() {
     app.use(
         '/graphql',
         cors<cors.CorsRequest>({
-            origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:5176'],
+            origin: [
+                'http://localhost:5173',
+                'http://localhost:5174',
+                'http://localhost:5175',
+                'http://localhost:5176',
+                'https://starides-virid.vercel.app', // Production Frontend
+                /\.vercel\.app$/ // Allow any Vercel preview deployment
+            ],
             credentials: true
         }),
         express.json(),
