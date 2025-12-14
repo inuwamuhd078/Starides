@@ -3,6 +3,8 @@ import { Link, Routes, Route } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { useQuery, useMutation, gql } from '@apollo/client';
+import { HomeIcon, OrdersIcon, UsersIcon, StoreIcon, ClockIcon, BikeIcon, CurrencyIcon } from '../../components/Icons';
+import logo from '../../assets/logo.png';
 import './AdminDashboard.css';
 
 const GET_ADMIN_STATS = gql`
@@ -48,18 +50,18 @@ const AdminDashboard: React.FC = () => {
             <aside className="admin-sidebar">
                 <div className="sidebar-header">
                     <Link to="/" className="sidebar-logo">
-                        <span className="sidebar-logo-icon">⭐</span>
+                        <img src={logo} alt="Starides Logo" className="sidebar-logo-img" />
                         <span>STARIDES</span>
                     </Link>
                 </div>
 
                 <nav className="sidebar-nav">
                     <Link to="/admin" className="sidebar-nav-item active">
-                        <span className="sidebar-nav-icon">🏠</span>
+                        <HomeIcon className="sidebar-nav-icon" />
                         <span>Home</span>
                     </Link>
                     <Link to="/admin/orders" className="sidebar-nav-item">
-                        <span className="sidebar-nav-icon">📋</span>
+                        <OrdersIcon className="sidebar-nav-icon" />
                         <span>My Orders</span>
                     </Link>
                 </nav>
@@ -119,55 +121,87 @@ const AdminHome: React.FC = () => {
 
             <div className="stats-grid">
                 <div className="stat-card">
-                    <div className="stat-icon">👥</div>
-                    <p className="stat-value">{totalUsers}</p>
-                    <h3>Users</h3>
+                    <div className="stat-icon-wrapper text-secondary">
+                        <UsersIcon className="stat-icon" />
+                    </div>
+                    <div className="stat-content">
+                        <p className="stat-value">{totalUsers}</p>
+                        <h3>Users</h3>
+                    </div>
                 </div>
 
                 <div className="stat-card">
-                    <div className="stat-icon">🏪</div>
-                    <p className="stat-value">{totalVendors}</p>
-                    <h3>Vendors</h3>
+                    <div className="stat-icon-wrapper text-accent">
+                        <StoreIcon className="stat-icon" />
+                    </div>
+                    <div className="stat-content">
+                        <p className="stat-value">{totalVendors}</p>
+                        <h3>Vendors</h3>
+                    </div>
                 </div>
 
                 <div className="stat-card">
-                    <div className="stat-icon">⏳</div>
-                    <p className="stat-value">{pendingVendors}</p>
-                    <h3>Pending</h3>
+                    <div className="stat-icon-wrapper text-warning">
+                        <ClockIcon className="stat-icon" />
+                    </div>
+                    <div className="stat-content">
+                        <p className="stat-value">{pendingVendors}</p>
+                        <h3>Pending</h3>
+                    </div>
                 </div>
 
                 <div className="stat-card">
-                    <div className="stat-icon">🚴</div>
-                    <p className="stat-value">{totalRiders}</p>
-                    <h3>Riders</h3>
+                    <div className="stat-icon-wrapper text-success">
+                        <BikeIcon className="stat-icon" />
+                    </div>
+                    <div className="stat-content">
+                        <p className="stat-value">{totalRiders}</p>
+                        <h3>Riders</h3>
+                    </div>
                 </div>
 
                 <div className="stat-card">
-                    <div className="stat-icon">📦</div>
-                    <p className="stat-value">{stats?.totalOrders || 0}</p>
-                    <h3>Orders</h3>
+                    <div className="stat-icon-wrapper text-info">
+                        <OrdersIcon className="stat-icon" />
+                    </div>
+                    <div className="stat-content">
+                        <p className="stat-value">{stats?.totalOrders || 0}</p>
+                        <h3>Orders</h3>
+                    </div>
                 </div>
 
                 <div className="stat-card">
-                    <div className="stat-icon">💵</div>
-                    <p className="stat-value">${stats?.totalRevenue?.toFixed(0) || '0'}</p>
-                    <h3>Revenue</h3>
+                    <div className="stat-icon-wrapper text-primary">
+                        <CurrencyIcon className="stat-icon" />
+                    </div>
+                    <div className="stat-content">
+                        <p className="stat-value">${stats?.totalRevenue?.toFixed(0) || '0'}</p>
+                        <h3>Revenue</h3>
+                    </div>
                 </div>
             </div>
 
             <div className="action-cards-grid">
                 <Link to="/admin/restaurants" className="action-card">
-                    <div className="action-icon">🏪</div>
-                    <h3>Manage Vendors</h3>
-                    <p>{pendingVendors} vendors pending approval</p>
-                    <span className="action-link">View Vendors →</span>
+                    <div className="action-icon-wrapper text-primary">
+                        <StoreIcon className="action-icon" />
+                    </div>
+                    <div className="action-content">
+                        <h3>Manage Vendors</h3>
+                        <p>{pendingVendors} vendors pending approval</p>
+                        <span className="action-link">View Vendors →</span>
+                    </div>
                 </Link>
 
                 <Link to="/admin/users" className="action-card">
-                    <div className="action-icon">🚴</div>
-                    <h3>Manage Riders</h3>
-                    <p>{pendingRiders} riders pending verification</p>
-                    <span className="action-link">View Riders →</span>
+                    <div className="action-icon-wrapper text-primary">
+                        <BikeIcon className="action-icon" />
+                    </div>
+                    <div className="action-content">
+                        <h3>Manage Riders</h3>
+                        <p>{pendingRiders} riders pending verification</p>
+                        <span className="action-link">View Riders →</span>
+                    </div>
                 </Link>
             </div>
         </div>

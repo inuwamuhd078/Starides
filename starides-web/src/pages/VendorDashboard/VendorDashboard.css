@@ -36,6 +36,12 @@
     font-size: 1.25rem;
 }
 
+.sidebar-logo-img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
 .sidebar-logo-icon {
     font-size: 1.5rem;
 }
@@ -65,7 +71,8 @@
 }
 
 .sidebar-nav-icon {
-    font-size: 1.25rem;
+    width: 20px;
+    height: 20px;
 }
 
 .sidebar-footer {
@@ -132,64 +139,56 @@
     color: var(--color-text-primary);
 }
 
-/* Main Content Area */
+/* Main Content */
 .vendor-main-content {
     margin-left: 240px;
     flex: 1;
     padding: 2rem;
 }
 
-.page-title {
-    font-size: 1.875rem;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    margin-bottom: 2rem;
-}
-
 /* Restaurant Header */
 .restaurant-header-section {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
     margin-bottom: 2rem;
 }
 
 .restaurant-name {
-    font-size: 1.5rem;
+    font-size: 1.875rem;
     font-weight: 700;
     color: var(--color-text-primary);
     margin: 0;
 }
 
-.status-badge {
-    display: inline-block;
-    padding: 0.375rem 0.875rem;
+.status-pill {
+    padding: 0.25rem 0.75rem;
     border-radius: 9999px;
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: inline-flex;
+    align-items: center;
 }
 
 .status-pending {
-    background: var(--color-warning);
-    color: white;
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--color-warning);
+    border: 1px solid rgba(245, 158, 11, 0.2);
 }
 
 .status-active {
-    background: var(--color-success);
-    color: white;
-}
-
-.status-approved {
-    background: var(--color-success);
-    color: white;
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--color-success);
+    border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 /* Stats Grid */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
     margin-bottom: 2rem;
 }
 
@@ -202,8 +201,9 @@
     transition: all 0.2s;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
+    align-items: flex-start;
+    text-align: left;
+    height: 100%;
 }
 
 .stat-card:hover {
@@ -211,29 +211,54 @@
     box-shadow: var(--shadow-md);
 }
 
+.stat-icon-wrapper {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+}
+
+/* Text Colors */
+.text-primary .stat-icon,
+.text-primary.action-icon-wrapper {
+    color: var(--color-primary);
+}
+
+.text-info .stat-icon,
+.text-info.action-icon-wrapper {
+    color: var(--color-info);
+}
+
+.text-warning .stat-icon,
+.text-warning.action-icon-wrapper {
+    color: var(--color-warning);
+}
+
+.text-success .stat-icon,
+.text-success.action-icon-wrapper {
+    color: var(--color-success);
+}
+
 .stat-icon {
-    font-size: 2.5rem;
-    margin-bottom: 0.75rem;
+    width: 32px;
+    height: 32px;
 }
 
 .stat-card h3 {
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     color: var(--color-text-secondary);
     font-weight: 500;
-    margin: 0 0 0.5rem 0;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.stat-value {
-    font-size: 1.875rem;
-    font-weight: 700;
-    color: var(--color-text-primary);
     margin: 0;
 }
 
-.stat-card small {
-    display: none;
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0 0 0.25rem 0;
 }
 
 /* Action Cards */
@@ -252,7 +277,9 @@
     border: 1px solid var(--color-border-light);
     text-decoration: none;
     transition: all 0.2s;
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .action-card:hover {
@@ -260,9 +287,13 @@
     box-shadow: var(--shadow-md);
 }
 
-.action-icon {
-    font-size: 3rem;
+.action-icon-wrapper {
     margin-bottom: 1rem;
+}
+
+.action-icon {
+    width: 48px;
+    height: 48px;
 }
 
 .action-card h3 {
@@ -274,7 +305,7 @@
 
 .action-card p {
     color: var(--color-text-secondary);
-    margin: 0 0 1rem 0;
+    margin: 0 0 1.5rem 0;
     font-size: 0.875rem;
 }
 
@@ -297,22 +328,35 @@
     background: var(--color-bg-secondary);
     border-radius: 1rem;
     padding: 2rem;
-    margin-top: 2rem;
+    margin-top: 1.5rem;
     box-shadow: var(--shadow-sm);
     border: 1px solid var(--color-border-light);
 }
 
 .recent-orders-section h2 {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     font-weight: 700;
     color: var(--color-text-primary);
-    margin: 0 0 1.5rem 0;
+    margin: 0 0 1rem 0;
 }
 
 .empty-state {
     text-align: center;
     padding: 3rem;
     color: var(--color-text-secondary);
+}
+
+.empty-state-card {
+    background: var(--color-bg-secondary);
+    border-radius: 1rem;
+    border: 1px solid var(--color-border-light);
+    padding: 2rem;
+    text-align: center;
+    color: var(--color-text-secondary);
+}
+
+.mt-6 {
+    margin-top: 1.5rem;
 }
 
 /* Mobile Navigation Styles */

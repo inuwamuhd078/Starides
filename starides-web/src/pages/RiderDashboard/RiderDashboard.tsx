@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, Routes, Route } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import { HomeIcon, OrdersIcon, CheckCircleIcon, CurrencyIcon, StarIcon } from '../../components/Icons';
+import logo from '../../assets/logo.png';
 import './RiderDashboard.css';
 
 const RiderDashboard: React.FC = () => {
@@ -13,7 +15,7 @@ const RiderDashboard: React.FC = () => {
     const closeSidebar = () => setIsSidebarOpen(false);
 
     return (
-        <div className="rider-dashboard admin-dashboard">
+        <div className="rider-dashboard">
             {/* Mobile Hamburger Button */}
             <button
                 className="mobile-menu-btn"
@@ -32,7 +34,7 @@ const RiderDashboard: React.FC = () => {
             <aside className={`admin-sidebar rider-sidebar ${isSidebarOpen ? 'open' : ''}`}>
                 <div className="sidebar-header">
                     <Link to="/" className="sidebar-logo" onClick={closeSidebar}>
-                        <span className="sidebar-logo-icon">⭐</span>
+                        <img src={logo} alt="Starides Logo" className="sidebar-logo-img" />
                         <span>STARIDES</span>
                     </Link>
                     <button className="close-sidebar-btn hidden-desktop" onClick={closeSidebar}>
@@ -42,12 +44,12 @@ const RiderDashboard: React.FC = () => {
 
                 <nav className="sidebar-nav">
                     <Link to="/rider" className="sidebar-nav-item active" onClick={closeSidebar}>
-                        <span className="sidebar-nav-icon">🏠</span>
+                        <HomeIcon className="sidebar-nav-icon" />
                         <span>Home</span>
                     </Link>
                     <Link to="/rider/deliveries" className="sidebar-nav-item" onClick={closeSidebar}>
-                        <span className="sidebar-nav-icon">📋</span>
-                        <span>My Deliveries</span>
+                        <OrdersIcon className="sidebar-nav-icon" />
+                        <span>My Orders</span>
                     </Link>
                 </nav>
 
@@ -75,7 +77,7 @@ const RiderDashboard: React.FC = () => {
             </aside>
 
             {/* Main Content */}
-            <main className="admin-main-content">
+            <main className="rider-main-content">
                 <Routes>
                     <Route index element={<RiderHome />} />
                     <Route path="deliveries" element={<RiderDeliveries />} />
@@ -88,51 +90,80 @@ const RiderDashboard: React.FC = () => {
 };
 
 const RiderHome: React.FC = () => {
+    const { user } = useAuth();
+    const [isOnline, setIsOnline] = useState(false);
 
     return (
         <div>
-            <h1 className="page-title">Rider Dashboard</h1>
+            <div className="dashboard-header">
+                <div>
+                    <h1 className="page-title">Rider Dashboard</h1>
+                    <p className="user-welcome">{user?.firstName || 'Abu'}</p>
+                </div>
+                <button
+                    className={`status-toggle-btn ${isOnline ? 'online' : 'offline'}`}
+                    onClick={() => setIsOnline(!isOnline)}
+                >
+                    {isOnline ? 'Make Offline' : 'Offline'}
+                    <span className="toggle-icon">{isOnline ? '●' : '○'}</span>
+                </button>
+            </div>
 
             <div className="stats-grid">
                 <div className="stat-card">
-                    <div className="stat-icon">📦</div>
-                    <p className="stat-value">0</p>
-                    <h3>Active Deliveries</h3>
+                    <div className="stat-icon-wrapper text-info">
+                        <OrdersIcon className="stat-icon" />
+                    </div>
+                    <div className="stat-content">
+                        <p className="stat-value">0</p>
+                        <h3>Active</h3>
+                    </div>
                 </div>
 
                 <div className="stat-card">
-                    <div className="stat-icon">✅</div>
-                    <p className="stat-value">0</p>
-                    <h3>Completed Today</h3>
+                    <div className="stat-icon-wrapper text-secondary">
+                        <CheckCircleIcon className="stat-icon" />
+                    </div>
+                    <div className="stat-content">
+                        <p className="stat-value">0</p>
+                        <h3>Completed</h3>
+                    </div>
                 </div>
 
                 <div className="stat-card">
-                    <div className="stat-icon">💵</div>
-                    <p className="stat-value">$0</p>
-                    <h3>Today's Earnings</h3>
+                    <div className="stat-icon-wrapper text-primary">
+                        <CurrencyIcon className="stat-icon" />
+                    </div>
+                    <div className="stat-content">
+                        <p className="stat-value">$0.00</p>
+                        <h3>Earnings</h3>
+                    </div>
                 </div>
 
                 <div className="stat-card">
-                    <div className="stat-icon">⭐</div>
-                    <p className="stat-value">-</p>
-                    <h3>Rating</h3>
+                    <div className="stat-icon-wrapper text-warning">
+                        <StarIcon className="stat-icon" />
+                    </div>
+                    <div className="stat-content">
+                        <p className="stat-value">-</p>
+                        <h3>Rating</h3>
+                    </div>
                 </div>
             </div>
 
-            <div className="action-cards-grid">
-                <Link to="/rider/available" className="action-card">
-                    <div className="action-icon">🔍</div>
-                    <h3>Find Deliveries</h3>
-                    <p>Browse available delivery requests</p>
-                    <span className="action-link">View Available →</span>
-                </Link>
+            <div className="section-container">
+                <div className="section-header">
+                    <h2>View Deliveries</h2>
+                    <span className="arrow-icon">→</span>
+                </div>
+                <p className="text-secondary">0 active deliveries waiting</p>
+            </div>
 
-                <Link to="/rider/deliveries" className="action-card">
-                    <div className="action-icon">📍</div>
-                    <h3>My Deliveries</h3>
-                    <p>Track your active deliveries</p>
-                    <span className="action-link">View Deliveries →</span>
-                </Link>
+            <div className="section-container mt-6">
+                <h2>Recent Deliveries</h2>
+                <div className="empty-state-card">
+                    <p className="text-secondary">No deliveries yet</p>
+                </div>
             </div>
         </div>
     );

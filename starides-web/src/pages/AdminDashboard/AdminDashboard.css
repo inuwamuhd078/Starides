@@ -36,6 +36,12 @@
     font-size: 1.25rem;
 }
 
+.sidebar-logo-img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
 .sidebar-logo-icon {
     font-size: 1.5rem;
 }
@@ -149,8 +155,8 @@
 /* Stats Grid */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
     margin-bottom: 2rem;
 }
 
@@ -163,8 +169,11 @@
     transition: all 0.2s;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
+    align-items: flex-start;
+    /* Left align as per screenshot */
+    text-align: left;
+    height: 100%;
+    justify-content: space-between;
 }
 
 .stat-card:hover {
@@ -172,29 +181,83 @@
     box-shadow: var(--shadow-md);
 }
 
+.stat-icon-wrapper {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--color-bg-tertiary);
+    /* Default bg */
+}
+
+/* Icon Color Backgrounds - Light tints */
+.text-primary .stat-icon,
+.text-primary.action-icon-wrapper {
+    color: var(--color-primary);
+}
+
+.text-secondary .stat-icon,
+.text-secondary.action-icon-wrapper {
+    color: var(--color-secondary);
+}
+
+.text-accent .stat-icon,
+.text-accent.action-icon-wrapper {
+    color: var(--color-accent);
+}
+
+.text-warning .stat-icon,
+.text-warning.action-icon-wrapper {
+    color: var(--color-warning);
+}
+
+.text-success .stat-icon,
+.text-success.action-icon-wrapper {
+    color: var(--color-success);
+}
+
+.text-info .stat-icon,
+.text-info.action-icon-wrapper {
+    color: var(--color-info);
+}
+
+/* Specific background tints for icon wrappers if needed, 
+   but screenshot shows just the icon colored on a light bg. 
+   Let's keep bg-tertiary for now or make it transparent?
+   Screenshot shows icons have no visible bg box, just the icon itself is large?
+   Wait, looking closely at "1 Users": The icon is purple, sitting freely. 
+   Let's remove the wrapper bg or make it transparent.
+*/
+
+.stat-icon-wrapper {
+    background: transparent;
+    width: auto;
+    height: auto;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
 .stat-icon {
-    font-size: 2.5rem;
-    margin-bottom: 0.75rem;
+    width: 32px;
+    height: 32px;
 }
 
 .stat-card h3 {
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     color: var(--color-text-secondary);
     font-weight: 500;
-    margin: 0 0 0.5rem 0;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.stat-value {
-    font-size: 1.875rem;
-    font-weight: 700;
-    color: var(--color-text-primary);
     margin: 0;
 }
 
-.stat-card small {
-    display: none;
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0 0 0.25rem 0;
+    line-height: 1.2;
 }
 
 /* Action Cards */
@@ -213,7 +276,10 @@
     border: 1px solid var(--color-border-light);
     text-decoration: none;
     transition: all 0.2s;
-    display: block;
+    display: flex;
+    /* Horizontal Layout? Screenshot shows vertical for these */
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .action-card:hover {
@@ -221,9 +287,13 @@
     box-shadow: var(--shadow-md);
 }
 
-.action-icon {
-    font-size: 3rem;
+.action-icon-wrapper {
     margin-bottom: 1rem;
+}
+
+.action-icon {
+    width: 48px;
+    height: 48px;
 }
 
 .action-card h3 {
@@ -235,7 +305,7 @@
 
 .action-card p {
     color: var(--color-text-secondary);
-    margin: 0 0 1rem 0;
+    margin: 0 0 1.5rem 0;
     font-size: 0.875rem;
 }
 

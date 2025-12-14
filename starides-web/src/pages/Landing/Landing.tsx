@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import logo from '../../assets/logo.png';
 import './Landing.css';
 
 const Landing: React.FC = () => {
@@ -16,7 +17,7 @@ const Landing: React.FC = () => {
                     <div className="container">
                         <div className="navbar-content">
                             <div className="logo">
-                                <span className="logo-icon">🚀</span>
+                                <img src={logo} alt="Starides Logo" className="logo-img" />
                                 <span className="logo-text">Starides</span>
                             </div>
                             <div className="nav-links">
@@ -205,7 +206,7 @@ const Landing: React.FC = () => {
                     <div className="footer-content">
                         <div className="footer-section">
                             <div className="logo">
-                                <span className="logo-icon">🚀</span>
+                                <img src={logo} alt="Starides Logo" className="logo-img" />
                                 <span className="logo-text">Starides</span>
                             </div>
                             <p className="footer-description">

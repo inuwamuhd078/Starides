@@ -4,6 +4,8 @@ import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { useQuery, useMutation } from '@apollo/client';
 import { CREATE_RESTAURANT, GET_MY_RESTAURANT, CREATE_MENU_ITEM, GET_MENU_ITEMS, GET_VENDOR_STATS, TOGGLE_RESTAURANT_OPEN } from '../../graphql/restaurants';
+import { HomeIcon, OrdersIcon, StoreIcon, ClockIcon, CheckCircleIcon, CurrencyIcon } from '../../components/Icons';
+import logo from '../../assets/logo.png';
 import './VendorDashboard.css';
 
 const VendorDashboard: React.FC = () => {
@@ -32,10 +34,10 @@ const VendorDashboard: React.FC = () => {
             )}
 
             {/* Sidebar */}
-            <aside className={`vendor-sidebar ${isSidebarOpen ? 'open' : ''}`}>
+            <aside className={`admin-sidebar vendor-sidebar ${isSidebarOpen ? 'open' : ''}`}>
                 <div className="sidebar-header">
                     <Link to="/" className="sidebar-logo" onClick={closeSidebar}>
-                        <span className="sidebar-logo-icon">⭐</span>
+                        <img src={logo} alt="Starides Logo" className="sidebar-logo-img" />
                         <span>STARIDES</span>
                     </Link>
                     <button className="close-sidebar-btn hidden-desktop" onClick={closeSidebar}>
@@ -45,11 +47,11 @@ const VendorDashboard: React.FC = () => {
 
                 <nav className="sidebar-nav">
                     <Link to="/vendor" className="sidebar-nav-item active" onClick={closeSidebar}>
-                        <span className="sidebar-nav-icon">🏠</span>
+                        <HomeIcon className="sidebar-nav-icon" />
                         <span>Home</span>
                     </Link>
                     <Link to="/vendor/orders" className="sidebar-nav-item" onClick={closeSidebar}>
-                        <span className="sidebar-nav-icon">📋</span>
+                        <OrdersIcon className="sidebar-nav-icon" />
                         <span>My Orders</span>
                     </Link>
                 </nav>
@@ -116,66 +118,89 @@ const VendorHome: React.FC = () => {
             {restaurant && (
                 <div className="restaurant-header-section">
                     <h1 className="restaurant-name">{restaurant.name || 'ABU EATS'}</h1>
-                    <span className={`status-badge status-${(restaurant.status || 'pending').toLowerCase()}`}>
-                        {restaurant.status || 'Pending Approval'}
+                    <span className={`status-pill ${restaurant.status === 'ACTIVE' || restaurant.status === 'APPROVED' ? 'status-active' : 'status-pending'}`}>
+                        {restaurant.status === 'PENDING' ? 'Pending Approval' : restaurant.status || 'Active'}
                     </span>
-                    {restaurant.status === 'ACTIVE' && (
-                        <span className="status-badge status-active">Active</span>
-                    )}
                 </div>
             )}
 
             <div className="stats-grid">
                 <div className="stat-card">
-                    <div className="stat-icon">📦</div>
-                    <p className="stat-value">{stats?.totalOrders || 0}</p>
-                    <h3>Total Orders</h3>
+                    <div className="stat-icon-wrapper text-info">
+                        <OrdersIcon className="stat-icon" />
+                    </div>
+                    <div className="stat-content">
+                        <p className="stat-value">{stats?.totalOrders || 0}</p>
+                        <h3>Total Orders</h3>
+                    </div>
                 </div>
 
                 <div className="stat-card">
-                    <div className="stat-icon">⏰</div>
-                    <p className="stat-value">{pendingOrders}</p>
-                    <h3>Pending</h3>
+                    <div className="stat-icon-wrapper text-warning">
+                        <ClockIcon className="stat-icon" />
+                    </div>
+                    <div className="stat-content">
+                        <p className="stat-value">{pendingOrders}</p>
+                        <h3>Pending</h3>
+                    </div>
                 </div>
 
                 <div className="stat-card">
-                    <div className="stat-icon">✅</div>
-                    <p className="stat-value">{completedOrders}</p>
-                    <h3>Completed</h3>
+                    <div className="stat-icon-wrapper text-success">
+                        <CheckCircleIcon className="stat-icon" />
+                    </div>
+                    <div className="stat-content">
+                        <p className="stat-value">{completedOrders}</p>
+                        <h3>Completed</h3>
+                    </div>
                 </div>
 
                 <div className="stat-card">
-                    <div className="stat-icon">💵</div>
-                    <p className="stat-value">${stats?.totalRevenue?.toFixed(0) || '0'}</p>
-                    <h3>Revenue</h3>
+                    <div className="stat-icon-wrapper text-primary">
+                        <CurrencyIcon className="stat-icon" />
+                    </div>
+                    <div className="stat-content">
+                        <p className="stat-value">${stats?.totalRevenue?.toFixed(0) || '0'}</p>
+                        <h3>Revenue</h3>
+                    </div>
                 </div>
             </div>
 
             <div className="action-cards-grid">
                 <Link to="/vendor/menu" className="action-card">
-                    <div className="action-icon">🏪</div>
-                    <h3>Manage Products</h3>
-                    <p>{data?.menuItems?.length || 1} of 1 products active</p>
-                    <span className="action-link">View Products →</span>
+                    <div className="action-icon-wrapper text-info">
+                        <StoreIcon className="action-icon" />
+                    </div>
+                    <div className="action-content">
+                        <h3>Manage Products</h3>
+                        <p>{data?.menuItems?.length || 1} of 1 products active</p>
+                        <span className="action-link">View Products →</span>
+                    </div>
                 </Link>
 
                 <Link to="/vendor/orders" className="action-card">
-                    <div className="action-icon">📦</div>
-                    <h3>View Orders</h3>
-                    <p>{pendingOrders} pending orders to process</p>
-                    <span className="action-link">View Orders →</span>
+                    <div className="action-icon-wrapper text-primary">
+                        <OrdersIcon className="action-icon" />
+                    </div>
+                    <div className="action-content">
+                        <h3>View Orders</h3>
+                        <p>{pendingOrders} pending orders to process</p>
+                        <span className="action-link">View Orders →</span>
+                    </div>
                 </Link>
             </div>
 
             {/* Recent Orders */}
-            <div className="recent-orders-section">
+            <div className="recent-orders-section mt-6">
                 <h2>Recent Orders</h2>
                 {orders.length === 0 ? (
-                    <div className="empty-state">No orders yet</div>
+                    <div className="empty-state-card">
+                        <p className="text-secondary">No orders yet</p>
+                    </div>
                 ) : (
                     <div>
                         {/* Orders list would go here */}
-                        <div className="empty-state">No orders yet</div>
+                        <div className="empty-state-card">No orders yet</div>
                     </div>
                 )}
             </div>
