@@ -4,8 +4,37 @@ import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { useQuery, useMutation, gql } from '@apollo/client';
 import { HomeIcon, OrdersIcon, UsersIcon, StoreIcon, ClockIcon, BikeIcon, CurrencyIcon } from '../../components/Icons';
+import { AreaChartCard, BarChartCard, PieChartCard } from '../../components/Charts';
 import logo from '../../assets/logo.png';
 import './AdminDashboard.css';
+
+// Mock Data for Charts
+const revenueData = [
+    { name: 'Jan', value: 4000 },
+    { name: 'Feb', value: 3000 },
+    { name: 'Mar', value: 2000 },
+    { name: 'Apr', value: 2780 },
+    { name: 'May', value: 1890 },
+    { name: 'Jun', value: 2390 },
+    { name: 'Jul', value: 3490 },
+];
+
+const customerGrowthData = [
+    { name: 'Mon', value: 20 },
+    { name: 'Tue', value: 35 },
+    { name: 'Wed', value: 50 },
+    { name: 'Thu', value: 45 },
+    { name: 'Fri', value: 70 },
+    { name: 'Sat', value: 90 },
+    { name: 'Sun', value: 65 },
+];
+
+const orderStatusData = [
+    { name: 'Completed', value: 400 },
+    { name: 'Pending', value: 300 },
+    { name: 'Cancelled', value: 50 },
+    { name: 'In Transit', value: 200 },
+];
 
 const GET_ADMIN_STATS = gql`
   query GetAdminStats {
@@ -181,6 +210,16 @@ const AdminHome: React.FC = () => {
                 </div>
             </div>
 
+            {/* Analytics Charts Section */}
+            <div className="analytics-section">
+                <h2 className="section-title">Analytics Overview</h2>
+                <div className="charts-grid">
+                    <AreaChartCard title="Revenue Trend" data={revenueData} color="var(--color-primary)" className="chart-large" />
+                    <PieChartCard title="Order Status Distribution" data={orderStatusData} />
+                    <BarChartCard title="New Customer Growth" data={customerGrowthData} color="var(--color-success)" />
+                </div>
+            </div>
+
             <div className="action-cards-grid">
                 <Link to="/admin/restaurants" className="action-card">
                     <div className="action-icon-wrapper text-primary">
@@ -204,7 +243,7 @@ const AdminHome: React.FC = () => {
                     </div>
                 </Link>
             </div>
-        </div>
+        </div >
     );
 };
 

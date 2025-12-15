@@ -5,8 +5,27 @@ import { useTheme } from '../../context/ThemeContext';
 import { useQuery, useMutation } from '@apollo/client';
 import { CREATE_RESTAURANT, GET_MY_RESTAURANT, CREATE_MENU_ITEM, GET_MENU_ITEMS, GET_VENDOR_STATS, TOGGLE_RESTAURANT_OPEN } from '../../graphql/restaurants';
 import { HomeIcon, OrdersIcon, StoreIcon, ClockIcon, CheckCircleIcon, CurrencyIcon } from '../../components/Icons';
+import { AreaChartCard, BarChartCard } from '../../components/Charts';
 import logo from '../../assets/logo.png';
 import './VendorDashboard.css';
+
+// Mock Data
+const salesData = [
+    { name: 'Mon', value: 1200 },
+    { name: 'Tue', value: 1500 },
+    { name: 'Wed', value: 1000 },
+    { name: 'Thu', value: 1800 },
+    { name: 'Fri', value: 2500 },
+    { name: 'Sat', value: 3000 },
+    { name: 'Sun', value: 2200 },
+];
+
+const topItemsData = [
+    { name: 'Burger', value: 150 },
+    { name: 'Pizza', value: 120 },
+    { name: 'Fries', value: 200 },
+    { name: 'Coke', value: 180 },
+];
 
 const VendorDashboard: React.FC = () => {
     const { logout, user } = useAuth();
@@ -163,6 +182,15 @@ const VendorHome: React.FC = () => {
                         <p className="stat-value">${stats?.totalRevenue?.toFixed(0) || '0'}</p>
                         <h3>Revenue</h3>
                     </div>
+                </div>
+            </div>
+
+            {/* Analytics Section */}
+            <div className="analytics-section">
+                <h2 className="section-title">Performance Analytics</h2>
+                <div className="charts-grid">
+                    <AreaChartCard title="Weekly Sales" data={salesData} color="var(--color-success)" className="chart-large" />
+                    <BarChartCard title="Top Selling Items" data={topItemsData} color="var(--color-primary)" />
                 </div>
             </div>
 

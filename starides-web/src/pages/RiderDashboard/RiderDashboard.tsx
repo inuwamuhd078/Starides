@@ -3,8 +3,30 @@ import { Link, Routes, Route } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { HomeIcon, OrdersIcon, CheckCircleIcon, CurrencyIcon, StarIcon } from '../../components/Icons';
+import { AreaChartCard, BarChartCard } from '../../components/Charts';
 import logo from '../../assets/logo.png';
 import './RiderDashboard.css';
+
+// Mock Data
+const earningsData = [
+    { name: 'Mon', value: 45 },
+    { name: 'Tue', value: 80 },
+    { name: 'Wed', value: 120 },
+    { name: 'Thu', value: 90 },
+    { name: 'Fri', value: 150 },
+    { name: 'Sat', value: 180 },
+    { name: 'Sun', value: 160 },
+];
+
+const performanceData = [
+    { name: 'Mon', value: 5 },
+    { name: 'Tue', value: 8 },
+    { name: 'Wed', value: 12 },
+    { name: 'Thu', value: 10 },
+    { name: 'Fri', value: 15 },
+    { name: 'Sat', value: 18 },
+    { name: 'Sun', value: 14 },
+];
 
 const RiderDashboard: React.FC = () => {
     const { logout, user } = useAuth();
@@ -151,18 +173,30 @@ const RiderHome: React.FC = () => {
                 </div>
             </div>
 
-            <div className="section-container">
-                <div className="section-header">
-                    <h2>View Deliveries</h2>
-                    <span className="arrow-icon">→</span>
+            {/* Analytics Section */}
+            <div className="analytics-section">
+                <h2 className="section-title">Weekly Performance</h2>
+                <div className="charts-grid">
+                    <AreaChartCard title="Earnings Trend" data={earningsData} color="var(--color-primary)" className="chart-large" />
+                    <BarChartCard title="Deliveries Completed" data={performanceData} color="var(--color-success)" />
                 </div>
-                <p className="text-secondary">0 active deliveries waiting</p>
             </div>
 
-            <div className="section-container mt-6">
-                <h2>Recent Deliveries</h2>
-                <div className="empty-state-card">
-                    <p className="text-secondary">No deliveries yet</p>
+            <div className="home-content">
+
+                <div className="section-container">
+                    <div className="section-header">
+                        <h2>View Deliveries</h2>
+                        <span className="arrow-icon">→</span>
+                    </div>
+                    <p className="text-secondary">0 active deliveries waiting</p>
+                </div>
+
+                <div className="section-container mt-6">
+                    <h2>Recent Deliveries</h2>
+                    <div className="empty-state-card">
+                        <p className="text-secondary">No deliveries yet</p>
+                    </div>
                 </div>
             </div>
         </div>
