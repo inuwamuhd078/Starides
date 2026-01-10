@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { LOGIN_MUTATION } from '../../graphql/auth';
 import { useAuth } from '../../context/AuthContext';
+import logo from '../../assets/logo.png';
 import './Auth.css';
 
 const Login: React.FC = () => {
@@ -68,8 +69,7 @@ const Login: React.FC = () => {
                 <div className="auth-card card">
                     <div className="auth-header">
                         <Link to="/" className="logo">
-                            <span className="logo-icon">🚀</span>
-                            <span className="logo-text">Starides</span>
+                            <img src={logo} alt="Starides" className="logo-image" />
                         </Link>
                         <h1 className="auth-title">Welcome Back</h1>
                         <p className="auth-subtitle">Sign in to your account</p>

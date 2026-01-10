@@ -29,6 +29,11 @@
     text-decoration: none;
 }
 
+.logo-image {
+    height: 48px;
+    width: auto;
+}
+
 .auth-title {
     font-family: var(--font-display);
     font-size: var(--text-3xl);
