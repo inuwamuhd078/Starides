@@ -5,6 +5,8 @@ import { useTheme } from '../../context/ThemeContext';
 import { useCart } from '../../context/CartContext';
 import { useQuery } from '@apollo/client';
 import { GET_MY_ORDERS } from '../../graphql/orders';
+import InstallButton from '../../components/PWA/InstallButton';
+import logo from '../../assets/logo.png';
 import './CustomerDashboard.css';
 
 const CustomerDashboard: React.FC = () => {
@@ -36,8 +38,8 @@ const CustomerDashboard: React.FC = () => {
             <aside className={`admin-sidebar customer-sidebar ${isSidebarOpen ? 'open' : ''}`}>
                 <div className="sidebar-header">
                     <Link to="/" className="sidebar-logo" onClick={closeSidebar}>
-                        <span className="sidebar-logo-icon">⭐</span>
-                        <span>STARIDES</span>
+                        <img src={logo} alt="Starides Logo" className="sidebar-logo-img" />
+                        <span className="logo-text">Starides</span>
                     </Link>
                     {/* Close button for mobile */}
                     <button className="close-sidebar-btn hidden-desktop" onClick={closeSidebar}>
@@ -61,6 +63,9 @@ const CustomerDashboard: React.FC = () => {
                 </nav>
 
                 <div className="sidebar-footer">
+                    {/* PWA Install Button */}
+                    <InstallButton />
+
                     {/* Theme Toggle */}
                     <button onClick={toggleTheme} className="logout-btn" style={{ marginBottom: '1rem' }}>
                         <span>{theme === 'light' ? '🌙' : '☀️'}</span>

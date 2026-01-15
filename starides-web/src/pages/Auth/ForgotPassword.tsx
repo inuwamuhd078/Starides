@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { REQUEST_PASSWORD_RESET } from '../../graphql/passwordReset';
+import logo from '../../assets/logo.png';
 import './Auth.css';
 
 const ForgotPassword: React.FC = () => {
@@ -45,8 +46,7 @@ const ForgotPassword: React.FC = () => {
                     <div className="auth-card card">
                         <div className="auth-header">
                             <Link to="/" className="logo">
-                                <span className="logo-icon">🚀</span>
-                                <span className="logo-text">Starides</span>
+                                <img src={logo} alt="Starides" className="logo-image" />
                             </Link>
                             <h1 className="auth-title">Check Your Email</h1>
                             <p className="auth-subtitle">
@@ -79,8 +79,7 @@ const ForgotPassword: React.FC = () => {
                 <div className="auth-card card">
                     <div className="auth-header">
                         <Link to="/" className="logo">
-                            <span className="logo-icon">🚀</span>
-                            <span className="logo-text">Starides</span>
+                            <img src={logo} alt="Starides" className="logo-image" />
                         </Link>
                         <h1 className="auth-title">Forgot Password?</h1>
                         <p className="auth-subtitle">

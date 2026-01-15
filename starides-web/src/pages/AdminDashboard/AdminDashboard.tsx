@@ -5,6 +5,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { useQuery, useMutation, gql } from '@apollo/client';
 import { HomeIcon, OrdersIcon, UsersIcon, StoreIcon, ClockIcon, BikeIcon, CurrencyIcon } from '../../components/Icons';
 import { AreaChartCard, BarChartCard, PieChartCard } from '../../components/Charts';
+import InstallButton from '../../components/PWA/InstallButton';
 import logo from '../../assets/logo.png';
 import './AdminDashboard.css';
 
@@ -96,6 +97,9 @@ const AdminDashboard: React.FC = () => {
                 </nav>
 
                 <div className="sidebar-footer">
+                    {/* PWA Install Button */}
+                    <InstallButton />
+
                     {/* Theme Toggle */}
                     <button onClick={toggleTheme} className="logout-btn" style={{ marginBottom: '1rem' }}>
                         <span>{theme === 'light' ? '🌙' : '☀️'}</span>

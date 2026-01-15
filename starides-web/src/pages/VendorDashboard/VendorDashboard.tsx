@@ -6,6 +6,7 @@ import { useQuery, useMutation } from '@apollo/client';
 import { CREATE_RESTAURANT, GET_MY_RESTAURANT, CREATE_MENU_ITEM, GET_MENU_ITEMS, GET_VENDOR_STATS, TOGGLE_RESTAURANT_OPEN } from '../../graphql/restaurants';
 import { HomeIcon, OrdersIcon, StoreIcon, ClockIcon, CheckCircleIcon, CurrencyIcon } from '../../components/Icons';
 import { AreaChartCard, BarChartCard } from '../../components/Charts';
+import InstallButton from '../../components/PWA/InstallButton';
 import logo from '../../assets/logo.png';
 import './VendorDashboard.css';
 
@@ -76,6 +77,9 @@ const VendorDashboard: React.FC = () => {
                 </nav>
 
                 <div className="sidebar-footer">
+                    {/* PWA Install Button */}
+                    <InstallButton />
+
                     {/* Theme Toggle */}
                     <button onClick={toggleTheme} className="logout-btn" style={{ marginBottom: '1rem' }}>
                         <span>{theme === 'light' ? '🌙' : '☀️'}</span>

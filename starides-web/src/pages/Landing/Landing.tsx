@@ -1,11 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import InstallBanner from '../../components/PWA/InstallBanner';
 import logo from '../../assets/logo.png';
 import './Landing.css';
 
 const Landing: React.FC = () => {
     return (
         <div className="landing">
+            {/* PWA Install Banner */}
+            <InstallBanner />
+
             {/* Hero Section */}
             <section className="hero">
                 <div className="hero-background">

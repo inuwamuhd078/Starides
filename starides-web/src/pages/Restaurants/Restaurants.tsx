@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { mockRestaurants } from '../../data/mockData';
+import logo from '../../assets/logo.png';
 import './Restaurants.css';
 
 const Restaurants: React.FC = () => {
@@ -23,7 +24,7 @@ const Restaurants: React.FC = () => {
                 <div className="container">
                     <div className="header-content">
                         <Link to="/" className="logo">
-                            <span className="logo-icon">🚀</span>
+                            <img src={logo} alt="Starides Logo" className="logo-img" />
                             <span className="logo-text">Starides</span>
                         </Link>
                         <nav className="header-nav">

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { RESET_PASSWORD } from '../../graphql/passwordReset';
+import logo from '../../assets/logo.png';
 import './Auth.css';
 
 const ResetPassword: React.FC = () => {
@@ -71,8 +72,7 @@ const ResetPassword: React.FC = () => {
                     <div className="auth-card card">
                         <div className="auth-header">
                             <Link to="/" className="logo">
-                                <span className="logo-icon">🚀</span>
-                                <span className="logo-text">Starides</span>
+                                <img src={logo} alt="Starides" className="logo-image" />
                             </Link>
                             <h1 className="auth-title">Invalid Reset Link</h1>
                             <p className="auth-subtitle">
@@ -103,8 +103,7 @@ const ResetPassword: React.FC = () => {
                     <div className="auth-card card">
                         <div className="auth-header">
                             <Link to="/" className="logo">
-                                <span className="logo-icon">🚀</span>
-                                <span className="logo-text">Starides</span>
+                                <img src={logo} alt="Starides" className="logo-image" />
                             </Link>
                             <h1 className="auth-title">Password Reset Successful!</h1>
                             <p className="auth-subtitle">
@@ -132,8 +131,7 @@ const ResetPassword: React.FC = () => {
                 <div className="auth-card card">
                     <div className="auth-header">
                         <Link to="/" className="logo">
-                            <span className="logo-icon">🚀</span>
-                            <span className="logo-text">Starides</span>
+                            <img src={logo} alt="Starides" className="logo-image" />
                         </Link>
                         <h1 className="auth-title">Reset Your Password</h1>
                         <p className="auth-subtitle">

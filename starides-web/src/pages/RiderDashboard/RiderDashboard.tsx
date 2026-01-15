@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { HomeIcon, OrdersIcon, CheckCircleIcon, CurrencyIcon, StarIcon } from '../../components/Icons';
 import { AreaChartCard, BarChartCard } from '../../components/Charts';
+import InstallButton from '../../components/PWA/InstallButton';
 import logo from '../../assets/logo.png';
 import './RiderDashboard.css';
 
@@ -76,6 +77,9 @@ const RiderDashboard: React.FC = () => {
                 </nav>
 
                 <div className="sidebar-footer">
+                    {/* PWA Install Button */}
+                    <InstallButton />
+
                     {/* Theme Toggle */}
                     <button onClick={toggleTheme} className="logout-btn" style={{ marginBottom: '1rem' }}>
                         <span>{theme === 'light' ? '🌙' : '☀️'}</span>

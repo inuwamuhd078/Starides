@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { GET_MY_ORDERS } from '../../graphql/orders';
+import logo from '../../assets/logo.png';
 import { useCart } from '../../context/CartContext';
 import OrderTracker from '../../components/Orders/OrderTracker';
 import './Orders.css';
@@ -46,7 +47,7 @@ const Orders: React.FC = () => {
                 // Note: We are using a simplified object here as we might not have all item details like 'restaurantId' directly on the item
                 // We rely on the order's restaurant info.
                 addItem({
-                    menuItemId: `${item.name}-${Date.now()}`, // Temporary ID generation if true ID missing
+                    menuItemId: `${item.name} -${Date.now()} `, // Temporary ID generation if true ID missing
                     name: item.name,
                     price: item.price,
                     quantity: item.quantity,
@@ -55,7 +56,7 @@ const Orders: React.FC = () => {
                     specialInstructions: ''
                 });
             });
-            navigate(`/cart`); // Go to cart instead of restaurant to checkout immediately
+            navigate(`/ cart`); // Go to cart instead of restaurant to checkout immediately
         }
     };
 
@@ -103,7 +104,7 @@ const Orders: React.FC = () => {
                 <div className="container">
                     <div className="header-content">
                         <Link to="/" className="logo">
-                            <span className="logo-icon">🚀</span>
+                            <img src={logo} alt="Starides Logo" className="logo-img" />
                             <span className="logo-text">Starides</span>
                         </Link>
                         <nav className="header-nav">
@@ -140,7 +141,7 @@ const Orders: React.FC = () => {
                                             </div>
                                             <div className="order-number">#{order.orderNumber}</div>
                                         </div>
-                                        <span className={`badge ${getStatusColor(order.status)}`}>
+                                        <span className={`badge ${getStatusColor(order.status)} `}>
                                             {formatStatus(order.status)}
                                         </span>
                                     </div>

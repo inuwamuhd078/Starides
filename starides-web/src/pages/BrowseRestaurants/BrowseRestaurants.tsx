@@ -5,6 +5,7 @@ import { gql } from '@apollo/client';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import ImagePlaceholder from '../../components/Common/ImagePlaceholder';
+import logo from '../../assets/logo.png';
 import './BrowseRestaurants.css';
 
 const GET_RESTAURANTS = gql`
@@ -57,7 +58,7 @@ const BrowseRestaurants: React.FC = () => {
                 <div className="container">
                     <div className="header-content">
                         <Link to="/" className="logo">
-                            <span className="logo-icon">🚀</span>
+                            <img src={logo} alt="Starides Logo" className="logo-img" />
                             <span className="logo-text">Starides</span>
                         </Link>
                         <div className="header-actions">
